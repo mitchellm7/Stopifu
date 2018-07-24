@@ -5,8 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def stopifu():
-    name = getDocumentList("doc/")
-    return render_template('index.html', name=name)
+    return render_template('index.html')
 
 @app.route('/get_stoplist/<name>')
 def getStoplist(name):
