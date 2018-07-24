@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <title> Spotifu </title>
+</head>
+    
+    
+<body>
+    <div class="container-fluid" aria-hidden="true">
+        <div class="row">
+            
+            <div id="cause" class="col-md-5">
+                <div class="col-md-12 sec_title">
+                    <div> <h2> Stoplists {{ name }} </h2> </div>
+                </div>
+                <div class="col-md-12 sub_section" id="sub_stoplist">
+                    <div class="d-flex flex-column">
+                        <div class="stoplist"> Stoplist 1 </div>
+                        <div class="stoplist"> Stoplist 2 </div>
+                        <div class="stoplist"> Stoplist 3 </div>                        
+                    </div>
+                </div>
+                <div class="col-md-12 sec_title">
+                    <div> <h2> Suggestions </h2> </div>
+                </div>
+                <div class="col-md-12 sub_section" id="sub_suggest">
+                    <div class="container-fluid" aria-hidden="true" id="suggestion_list">
+                        <div class="row">
+                            <div class="col-md-4 suggestion"> Metric 1 </div>
+                            <div class="col-md-4 suggestion"> Metric 2 </div>
+                            <div class="col-md-4 suggestion"> Metric 3 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="output" class="col-md-2">
+                <div class="col-md-12 sec_title">
+                    <div> <h2> Output </h2> </div>
+                </div>
+                <div class="col-md-12 sub_section" id="sub_fullStoplist"> Stopword List 
+<!--
+                    <div class="d-flex flex-wrap bg-light">
+                        <div class="p-2 tag"> Aasd </div>
+                        <div class="p-2 tag"> Asdssdasdsdas </div>
+                        <div class="p-2 tag"> Basdsadasda </div>
+                        <div class="p-2 tag"> Ads </div>
+                        <div class="p-2 tag"> Aerwerwefwfwefwef </div>
+                        <div class="p-2 tag"> Aq </div>
+                    </div>
+-->
+                
+                </div>
+                <div class="col-md-12 sub_section" id="sub_buttonPanel">
+                    <div class="d-flex flex-row-reverse">
+                        <div class="button_slot"> 
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> D
+                            </button>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            
+            <div id="effect" class="col-md-5">
+                <div class="col-md-12 sec_title">
+                    <div> <h2> Documents </h2> </div>
+                </div>
+                <div class="col-md-12 sub_section" id="sub_stats"> Before-After Stats </div>
+                <div class="col-md-12 sub_section" id="sub_vis"> Visualization </div>
+                <div class="col-md-12 sub_section" id="sub_documentList">
+                    <div class="d-flex flex-column">
+                        <div id="search"> 
+                            <input type="text" class="form-control" id="searchBar" placeholder="Search for document...">
+                        </div>
+                        <div class="document"> Document 1 </div>
+                        <div class="document"> Document 2 </div>
+                        <div class="document"> Document 3 </div>                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

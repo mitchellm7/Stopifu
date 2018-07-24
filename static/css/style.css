@@ -1,0 +1,91 @@
+body {
+    height: 100vh;
+}
+.container-fluid {
+    height: 100%;
+}
+.row {
+    height: 100%;
+}
+.col-md-5, .col-md-2{
+    padding: 0;
+    height: 100%;
+}
+.col-md-12 {
+    padding: 0;
+}
+
+#cause {
+    background-color: tomato;
+}
+#output {
+    background-color: orange;
+}
+#effect {
+    background-color: dodgerblue;
+}
+
+.sub_section {
+    overflow: hidden;
+    position: relative;
+    border: 1px solid black;
+}
+.sec_title {
+    background-color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    height: 7.5%;
+}
+
+.stoplist {
+    height: 60px;
+    border-bottom: 1px solid black;
+}
+.suggestion {
+    height: 100%;
+    border: 1px solid black;
+}
+.document {
+    height: 60px;
+    border-bottom: 1px solid black;
+}
+.button_slot {
+    height: 100%;
+    width: 34%;
+    padding: 10px;
+}
+#sub_stoplist {
+    height: 50%;
+}
+#sub_suggest {
+    height: 35%;
+}
+#suggestion_list{
+    height: 100%;
+}
+#sub_fullStoplist {
+    height: 82.5%;
+}
+#sub_buttonPanel {
+    height: 10%
+}
+#sub_stats {
+    height: 12.5%
+}
+#sub_vis {
+    height: 40%
+}
+#sub_documentList {
+    height: 40%;
+}
+
+#searchBar{
+    width: 100%;
+}
+
+.tag {
+    background-color: lightgrey;
+    border: 1px solid grey;
+    height: 30px;
+    padding 5px;
+}
+}
