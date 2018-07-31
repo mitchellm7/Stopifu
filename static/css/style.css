@@ -17,6 +17,7 @@ body {
 
 #cause {
     background-color: tomato;
+    position: relative;
 }
 #output {
     background-color: orange;
@@ -28,64 +29,134 @@ body {
 .sub_section {
     overflow: hidden;
     position: relative;
-    border: 1px solid black;
 }
 .sec_title {
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: lightgrey;
     text-align: center;
-    height: 7.5%;
+    height: 5%;
+    font-size: 18px;
 }
 
+.stoplist-wrapper{
+    width: 100%;
+    padding: 0;
+}
 .stoplist {
     height: 60px;
-    border-bottom: 1px solid black;
+    border-bottom: .5px solid black;
+    width: 100%;
+    margin: 0;
+    position: relative;
 }
+
 .suggestion {
     height: 100%;
-    border: 1px solid black;
+    border: .5px solid black;
 }
 .document {
     height: 60px;
-    border-bottom: 1px solid black;
+    border-bottom: .5px solid black;
 }
 .button_slot {
     height: 100%;
     width: 34%;
     padding: 10px;
 }
+
 #sub_stoplist {
     height: 50%;
 }
 #sub_suggest {
-    height: 35%;
+    height: 40%;
 }
 #suggestion_list{
     height: 100%;
 }
 #sub_fullStoplist {
-    height: 82.5%;
+    height: 85%;
+    padding: 5px;
 }
 #sub_buttonPanel {
     height: 10%
 }
 #sub_stats {
-    height: 12.5%
+    height: 10%
 }
 #sub_vis {
     height: 40%
 }
 #sub_documentList {
-    height: 40%;
+    height: 45%;
 }
 
 #searchBar{
     width: 100%;
 }
 
-.tag {
-    background-color: lightgrey;
-    border: 1px solid grey;
-    height: 30px;
-    padding 5px;
+.stop-metadata {
+    width: 100%;
+    height: 50%;
+    padding: 0px 20px;
+    cursor: default;
 }
+
+.stopword-preview {
+    width: 100%;
+    height: 50%;
+    padding: 0px 20px;
+    color: whitesmoke;
+}
+.hover-options {
+    font-size: 12px;
+    padding: 0;
+}
+.listcontentwrapper {
+    padding: 0;
+}
+
+.stopword {
+    background-color: ghostwhite;
+    border: .25px solid grey;
+    margin: 2px;
+    height: 40px;
+    cursor: default;
+    padding: 6px 2px 6px 6px;
+}
+
+#createStoplist-btn {
+    position: absolute;
+    right: 1%;
+    top: 85%;
+    border-radius: 50%;
+}
+
+.stopwordRemove-btn {
+    font-size: 22px;
+    margin: 0px 4px;
+}
+
+.stopwordRemove-btn:focus {
+    outline:0;
+}
+
+.stoplistEdit-btn {
+    position: absolute;
+    font-size: 12px;
+    width: 50px;
+    right: 1%;
+    top: 5%;
+    padding: 2px;
+}
+
+.stoplistDelete-btn {
+    position: absolute;
+    font-size: 12px;
+    width: 50px;
+    right: 1%;
+    top: 53%;
+    padding: 2px;
+}
+
+.stoplistInfoWrapper {
+    height: 100%;
 }

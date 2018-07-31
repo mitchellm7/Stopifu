@@ -1,0 +1,4 @@
+articles	gen	1
+the
+an
+a

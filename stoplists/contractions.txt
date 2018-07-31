@@ -1,0 +1,7 @@
+contractions	gen	1
+i'd
+wouldn't
+i've
+you'll
+he'll
+she'll

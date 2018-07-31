@@ -2,35 +2,87 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Javascript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
-    <title> Spotifu </title>
+    <title> Stopifu </title>
 </head>
     
     
 <body>
-    <div class="container-fluid" aria-hidden="true">
-        <div class="row">
-            
-            <div id="cause" class="col-md-5">
-                <div class="col-md-12 sec_title">
-                    <div> <h2> Stoplists </h2> </div>
+    <div class="modal fade" id="addStoplistPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> New Stoplist </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="col-md-12 sub_section" id="sub_stoplist">
-                    <div class="d-flex flex-column">
-                        <div class="stoplist"> Stoplist 1 </div>
-                        <div class="stoplist"> Stoplist 2 </div>
-                        <div class="stoplist"> Stoplist 3 </div>                        
+                <div class="modal-body"> 
+                    <div class="form-group">
+                        <label for="createStoplistName" class="col-form-label">Stoplist Name</label>
+                        <input type="text" class="form-control" id="createStoplistName">
+                        <label for="createStoplistCategory" class="col-form-label">Category</label>
+                        <input type="text" class="form-control" id="createStoplistCategory">
+                        <label for="createStoplistWords" class="col-form-label">Stopwords (optional)</label>
+                        <textarea type="text" class="form-control" id="createStoplistWords"></textarea>
                     </div>
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmStoplist-btn">Create Stoplist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editStoplistPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stoplistEditTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"> 
+                    <div class="d-flex align-content-start flex-wrap" id="stoplistEditWords" disabled></div>
+                    <div class="form-group">
+                        <label for="stopword-form" class="col-form-label">Stopwords to add</label>
+                        <textarea class="form-control" id="stoplistEditform"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="stoplistAddBtn">Add Words</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid" aria-hidden="true">
+        <div class="row">
+            <div id="cause" class="col-md-5">
                 <div class="col-md-12 sec_title">
-                    <div> <h2> Suggestions </h2> </div>
+                    Stoplists
+                </div>
+                <div class="col-md-12 sub_section" id="sub_stoplist">
+                    <div class="d-flex flex-column" id="stoplists"></div>
+                    <button type="button" class="btn btn-default" aria-label="Left Align" id="createStoplist-btn" onclick="createStoplist()">
+                        +
+                    </button>
+                </div>
+                <div class="col-md-12 sec_title">
+                    Suggestions
                 </div>
                 <div class="col-md-12 sub_section" id="sub_suggest">
                     <div class="container-fluid" aria-hidden="true" id="suggestion_list">
@@ -45,26 +97,14 @@
             
             <div id="output" class="col-md-2">
                 <div class="col-md-12 sec_title">
-                    <div> <h2> Output </h2> </div>
+                    Output
                 </div>
-                <div class="col-md-12 sub_section" id="sub_fullStoplist"> Stopword List 
-<!--
-                    <div class="d-flex flex-wrap bg-light">
-                        <div class="p-2 tag"> Aasd </div>
-                        <div class="p-2 tag"> Asdssdasdsdas </div>
-                        <div class="p-2 tag"> Basdsadasda </div>
-                        <div class="p-2 tag"> Ads </div>
-                        <div class="p-2 tag"> Aerwerwefwfwefwef </div>
-                        <div class="p-2 tag"> Aq </div>
-                    </div>
--->
-                
-                </div>
+                <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist"></div>
                 <div class="col-md-12 sub_section" id="sub_buttonPanel">
                     <div class="d-flex flex-row-reverse">
-                        <div class="button_slot"> 
+                        <div class="button_slot">
                             <button type="button" class="btn btn-default">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> D
+                                <span></span> D
                             </button>
                         </div>                        
                     </div>
@@ -73,9 +113,9 @@
             
             <div id="effect" class="col-md-5">
                 <div class="col-md-12 sec_title">
-                    <div> <h2> Documents </h2> </div>
+                    Documents
                 </div>
-                <div class="col-md-12 sub_section" id="sub_stats"> Before-After Stats </div>
+                <div class="col-md-12 sub_section" id="sub_stats"> return libr books </div>
                 <div class="col-md-12 sub_section" id="sub_vis"> Visualization </div>
                 <div class="col-md-12 sub_section" id="sub_documentList">
                     <div class="d-flex flex-column">
@@ -92,4 +132,13 @@
         </div>
     </div>
 </body>
+    
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  var documentNames = {{ documentNames|tojson|safe }};
+  var stoplistNames = {{ stoplistNames|safe }};
+</script>
+    
+<script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+    
 </html>
