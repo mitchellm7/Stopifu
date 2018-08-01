@@ -96,24 +96,39 @@ def getDocumentNames(path):
     return docs
 
 # Gets jsonified document information (Repurposed from Kipp's Stopify)
-@app.route('/get_document/<name>')
-def getDocument(path, name):
+@app.route('/get_document_sample/<name>')
+def getDocumentSample(path, name, jsonifyCheck = True):
+    document = {}
+    document['name'] = name
     contents = []
     if os.path.isfile(path + name + ".txt"):
         with open(path + name + ".txt", "r+") as file:
             for line in file:
                 contents.append(line.strip())
-        contents = ''.join(contents)
-        return jsonify({ 'contents':contents })
+                if len(contents) > 49:
+                    break
+        document['contents'] = ''.join(contents)
+        if jsonifyCheck:
+            return jsonify({ 'contents':contents })
+        else:
+            return document
     else:
         return "No such file exists."
 
+# Gets all documents
+@app.route('/get_all_documents/')
+def getAllDocuments():
+    allDocuments = []
+    documentNames = getDocumentNames("docTestDir/")
+    for documentName in documentNames:
+        allDocuments.append(getDocumentSample("docTestDir/", documentName, False))
+    return jsonify({  'allDocuments':allDocuments })
+    
 # Render index.html
 @app.route('/')
 def home():
     return render_template('index.html',
-                           documentNames = [],
-#                            documentNames = getDocumentNames("doc/"),
+                            documentNames = getDocumentNames("docTestDir/"),
                             stoplistNames = getStoplistNames())
     
 if __name__ == '__main__':

@@ -16,25 +16,22 @@ body {
 }
 
 #cause {
-    background-color: tomato;
     position: relative;
+    border-right: 1px solid #ccc;
 }
 #output {
-    background-color: orange;
+    border-right: 1px solid #ccc;
 }
 #effect {
-    background-color: dodgerblue;
+    
 }
 
-.sub_section {
-    overflow: hidden;
-    position: relative;
-}
 .sec_title {
-    background-color: lightgrey;
-    text-align: center;
+    background-color: #eeeeee;
     height: 5%;
-    font-size: 18px;
+    font-size: 14px;
+    padding: 0 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .stoplist-wrapper{
@@ -43,20 +40,32 @@ body {
 }
 .stoplist {
     height: 60px;
-    border-bottom: .5px solid black;
+    border-bottom: .5px solid grey;
     width: 100%;
     margin: 0;
     position: relative;
+    padding: 0 5px;
+}
+.stoplist:hover {
+    background-color: #eee;
 }
 
-.suggestion {
+.metric {
     height: 100%;
-    border: .5px solid black;
+    border-right: .5px solid grey;
 }
+
 .document {
     height: 60px;
-    border-bottom: .5px solid black;
+    border-bottom: .5px solid grey;
+    padding: 0 5px;
+    margin: 0;
+    position: relative;
 }
+.document:hover {
+    background-color: #eee;
+}
+
 .button_slot {
     height: 100%;
     width: 34%;
@@ -65,11 +74,13 @@ body {
 
 #sub_stoplist {
     height: 50%;
+    border-bottom: 1px solid #ccc;
+/*    overflow-y: scroll;*/
 }
-#sub_suggest {
+#sub_metric {
     height: 40%;
 }
-#suggestion_list{
+#sub_metric{
     height: 100%;
 }
 #sub_fullStoplist {
@@ -80,31 +91,37 @@ body {
     height: 10%
 }
 #sub_stats {
-    height: 10%
+    height: 10%;
+    border-bottom: 1px solid #ccc;
 }
 #sub_vis {
-    height: 40%
+    height: 40%;
+    border-bottom: 1px solid #ccc;
 }
 #sub_documentList {
     height: 45%;
+    position: absolute;
+    overflow-y: scroll;
 }
 
 #searchBar{
     width: 100%;
+    border: 0;
+    border-bottom: 1px solid #ccc;
 }
 
 .stop-metadata {
     width: 100%;
-    height: 50%;
-    padding: 0px 20px;
+    font-size: 15px;
     cursor: default;
+    padding: 0;
 }
 
 .stopword-preview {
     width: 100%;
-    height: 50%;
-    padding: 0px 20px;
-    color: whitesmoke;
+    color: gray;
+    cursor: default;
+    padding: 0;
 }
 .hover-options {
     font-size: 12px;
@@ -116,11 +133,13 @@ body {
 
 .stopword {
     background-color: ghostwhite;
-    border: .25px solid grey;
+    font-size: 14px;
     margin: 2px;
-    height: 40px;
+    max-height: 28px;
     cursor: default;
-    padding: 6px 2px 6px 6px;
+    padding: 2px 2px 4px 6px;
+    border: .75px solid grey;
+    border-radius: 5px;
 }
 
 #createStoplist-btn {
@@ -131,7 +150,7 @@ body {
 }
 
 .stopwordRemove-btn {
-    font-size: 22px;
+    font-size: 20px;
     margin: 0px 4px;
 }
 

@@ -72,7 +72,7 @@
     <div class="container-fluid" aria-hidden="true">
         <div class="row">
             <div id="cause" class="col-md-5">
-                <div class="col-md-12 sec_title">
+                <div class="col-md-12 sec_title navbar navbar-default">
                     Stoplists
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stoplist">
@@ -81,22 +81,22 @@
                         +
                     </button>
                 </div>
-                <div class="col-md-12 sec_title">
-                    Suggestions
+                <div class="col-md-12 sec_title navbar navbar-default">
+                    Metrics
                 </div>
-                <div class="col-md-12 sub_section" id="sub_suggest">
-                    <div class="container-fluid" aria-hidden="true" id="suggestion_list">
+                <div class="col-md-12 sub_section" id="sub_metric">
+                    <div class="container-fluid" aria-hidden="true" id="sub_metric">
                         <div class="row">
-                            <div class="col-md-4 suggestion"> Metric 1 </div>
-                            <div class="col-md-4 suggestion"> Metric 2 </div>
-                            <div class="col-md-4 suggestion"> Metric 3 </div>
+                            <div class="col-md-4 metric"> Metric 1 </div>
+                            <div class="col-md-4 metric"> Metric 2 </div>
+                            <div class="col-md-4 metric"> Metric 3 </div>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div id="output" class="col-md-2">
-                <div class="col-md-12 sec_title">
+                <div class="col-md-12 sec_title navbar navbar-default">
                     Output
                 </div>
                 <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist"></div>
@@ -112,19 +112,16 @@
             </div>
             
             <div id="effect" class="col-md-5">
-                <div class="col-md-12 sec_title">
+                <div class="col-md-12 sec_title navbar navbar-default">
                     Documents
                 </div>
-                <div class="col-md-12 sub_section" id="sub_stats"> return libr books </div>
+                <div class="col-md-12 sub_section" id="sub_stats"> Before-after Stats </div>
                 <div class="col-md-12 sub_section" id="sub_vis"> Visualization </div>
                 <div class="col-md-12 sub_section" id="sub_documentList">
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column" id="documents">
                         <div id="search"> 
-                            <input type="text" class="form-control" id="searchBar" placeholder="Search for document...">
-                        </div>
-                        <div class="document"> Document 1 </div>
-                        <div class="document"> Document 2 </div>
-                        <div class="document"> Document 3 </div>                        
+                            <input type="text" id="searchBar" placeholder="Search for document...">
+                        </div>                       
                     </div>
                 </div>
             </div>

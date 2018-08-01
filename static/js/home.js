@@ -2,6 +2,7 @@ var stoplistList = [];
 var stoplistIndices = {};
 var sessionStopwords = [];
 var stopwordIndices = {};
+var documentSamples = [];
 
 // Returns current date
 function getDate() {
@@ -38,7 +39,8 @@ function createStoplist() {
                 category: category,
                 date: date,
                 stopwords: stopwords,
-                active: false
+                active: false,
+                deleted: false
             });
             updateStoplistVisuals();
         }
@@ -75,8 +77,35 @@ function updateStoplistEditVisuals(name) {
         
         stopwordElem.enter()
             .append("span")
-            .attr("class", "stopword stopword-" + name)
+            .attr("class", "stopword stopword-" + function(d) { return d; })
             .text(function(d) { return d; })
+            .on("click", function(d) {
+                if (!(d in stopwordIndices)) {
+                    stopwordIndices[d] = sessionStopwords.length;
+                    sessionStopwords.push({
+                        word: d,
+                        inclusions: 0,
+                        enabled: false
+                    });
+                    d3.select(this).style("background-color", "darkgray");
+                }
+                else {
+                    if (sessionStopwords[stopwordIndices[d]].enabled) {
+                        sessionStopwords[stopwordIndices[d]].enabled = false;
+                        d3.select(this).style("background-color", "darkgray");
+                    }
+                    else {
+                        sessionStopwords[stopwordIndices[d]].enabled = true;
+                        d3.select(this).style("background-color", "ghostwhite");
+                    }
+                }
+                updateOutputVisuals();
+            })
+            .each(function(d) {
+                if ((d in stopwordIndices) && !sessionStopwords[stopwordIndices[d]].enabled) {
+                    d3.select(this).style("background-color", "darkgray");
+                }
+            })
             .append("button")
             .attr("class", "close stopwordRemove-btn")
             .append("span")
@@ -120,7 +149,7 @@ function deleteStoplist(name) {
         d3.json(stopURL, function(foo) {
             d3.select("#stoplist-" + name).remove();
         });
-        stoplistList.splice(stoplistIndices[name], 1);
+        stoplistList[stoplistIndices[name]].deleted = true;
         delete stoplistIndices[name];
         updateStoplistVisuals();
     }
@@ -197,7 +226,7 @@ function generateStoplistHTML(stoplistElem, name, category, date, stopwords) {
     // Appends stoplistInfoWrapper containing metadata and stopword display
     var stoplistInfoWrapper = d3.select(stoplistElem)
         .append("div")
-        .attr("class", "stoplistInfoWrapper-" + name)
+        .attr("class", "d-flex flex-column stoplistInfoWrapper-" + name)
         .on("click" , function() {
             toggleStoplistActivation(stoplistElem, name);
         })
@@ -205,7 +234,7 @@ function generateStoplistHTML(stoplistElem, name, category, date, stopwords) {
             .attr("class", "p-1 stop-metadata")
             .text(function() {
                 if (name.length + category.length + date.length > 30) { return name.substring(0, 15) + "..."; } 
-                else { return name + "\t" + category + "\t" + date; }
+                else { return name + "\t / \t" + category + "\t / \t" + date; }
             });
     var stopwordPreview = d3.select(".stoplistInfoWrapper-" + name)
         .append("div")
@@ -237,7 +266,7 @@ function generateStoplistHTML(stoplistElem, name, category, date, stopwords) {
 // Updates HTML elements for stoplists for stoplistList data 
 function updateStoplistVisuals() {
     var stoplistElem = d3.select("#stoplists").selectAll('.stoplist')
-        .data(stoplistList, function(d) {
+        .data(stoplistList.filter(function(d){ return d.deleted == false }), function(d) {
             return d.name;
         })
     
@@ -265,14 +294,70 @@ function addExistingStoplists() {
                 category: foo['allStoplists'][i]['category'],
                 date: foo['allStoplists'][i]['date'],
                 stopwords: foo['allStoplists'][i]['stopwords'],
-                active: false
+                active: false,
+                deleted: false
             });
         }
         updateStoplistVisuals();
     });
 }
 
+// Generates HTML and CSS for a document element (uses only params as data)
+function generateDocumentHTML(documentElem, name, contents) {
+    // Appends stoplistInfoWrapper containing metadata and stopword display
+    d3.select(documentElem)
+        .append("div")
+        .attr("class", "d-flex flex-column documentInfoWrapper-" + name)
+        .append("div")
+            .attr("class", "p-1 stop-metadata")
+            .text(function() {
+                return name;
+            });
+    var documentPreview = d3.select(".documentInfoWrapper-" + name)
+        .append("div")
+            .attr("class", "p-1 stopword-preview")
+            .text(function() {
+                return contents.substr(0, 50) + "...";
+            });
+}
+
+// Updates HTML elements for documents
+function updateDocumentVisuals() {
+    var documentElem = d3.select("#documents").selectAll('.document')
+        .data(documentSamples, function(d) {
+            return d.name;
+        })
+    
+    documentElem.enter()
+        .append("div")
+        .attr("class", "document")
+        .attr("id", "documentWrapper-" + (function(d) {
+            return d.name;
+        }))
+        .each(function(d) {
+            generateDocumentHTML(this, d.name, d.contents);
+        });
+    
+    documentElem.exit().remove();
+}
+
+// Gets all current stoplists from Stopifu.py, adds each to stoplistList
+function addExistingDocuments() {
+    var stopURL = '/get_all_documents/'
+    d3.json(stopURL, function(foo) {
+        for (i = 0; i < foo['allDocuments'].length; i++) {
+            documentSamples.push({
+                name: foo['allDocuments'][i]['name'],
+                contents: foo['allDocuments'][i]['contents']
+            });
+        }
+        updateDocumentVisuals();
+    });
+}
+
 // Main function
 window.onload = function() {
     addExistingStoplists();
+    addExistingDocuments();
+    
 }
