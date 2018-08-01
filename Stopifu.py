@@ -1,5 +1,4 @@
 import os
-from datetime import date
 from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
@@ -67,7 +66,6 @@ def addToStoplist(name, word):
     if os.path.isfile("stoplists/" + name + ".txt"):
         with open("stoplists/" + name + ".txt", "a+") as file:
             file.write("%s\n" % word)
-            file.close();
         return jsonify({})
     else:
         return "No such file exists."
@@ -114,7 +112,8 @@ def getDocument(path, name):
 @app.route('/')
 def home():
     return render_template('index.html',
-                            documentNames = getDocumentNames("doc/"),
+                           documentNames = [],
+#                            documentNames = getDocumentNames("doc/"),
                             stoplistNames = getStoplistNames())
     
 if __name__ == '__main__':
