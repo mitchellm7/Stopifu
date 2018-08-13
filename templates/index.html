@@ -39,7 +39,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmStoplist-btn">Create Stoplist</button>
+                    <button type="button" class="btn btn-primary" id="confirmStoplist-btn" onclick="createStoplist()">Create Stoplist</button>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeEdit-btn">Close</button>
                     <button type="button" class="btn btn-primary" id="stoplistAddBtn">Add Words</button>
                 </div>
             </div>
@@ -74,22 +74,30 @@
             <div id="cause" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Stoplists
+                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a stoplist to activate it.">?</button>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stoplist">
                     <div class="d-flex flex-column" id="stoplists"></div>
-                    <button type="button" class="btn btn-default" aria-label="Left Align" id="createStoplist-btn" onclick="createStoplist()">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addStoplistPopup" id="createStoplist-btn">
                         +
                     </button>
                 </div>
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Metrics
+                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a word to add/remove from your stoplist. <br> Hover to see advanced statistics.">?</button>
                 </div>
                 <div class="col-md-12 sub_section" id="sec_metric">
                     <div class="container-fluid" aria-hidden="true" id="sub_metric">
                         <div class="row">
-                            <div class="col-md-4 metric"> Metric 1 </div>
-                            <div class="col-md-4 metric"> Metric 2 </div>
-                            <div class="col-md-4 metric"> Metric 3 </div>
+                            <div class="col-md-4 metric" id="freqList"> 
+                                <div class="metric-title"> By Frequency </div>
+                            </div>
+                            <div class="col-md-4 metric" id="lengthList"> 
+                                <div class="metric-title"> By Length </div>
+                            </div>
+                            <div class="col-md-4 metric" id="tfidfList"> 
+                                <div class="metric-title" data-toggle="tooltip" data-placement="left" title="Term Frequency Inverse Document Frequency shows the importance of a word to a specific doc. in a corpus."> By Max. TFIDF </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,30 +106,69 @@
             <div id="output" class="col-md-2">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Output
+                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click 'x' to disable a stopword.<br> Click the download button to save the stoplist.">?</button>
                 </div>
-                <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist"></div>
-                <div class="col-md-12 sub_section" id="sub_buttonPanel">
-                    <div class="d-flex flex-row-reverse">
-                        <div class="button_slot">
-                            <button type="button" class="btn btn-default">
-                                <span></span> D
-                            </button>
-                        </div>                        
-                    </div>
+                <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist">
+                    <button type="button" class="btn btn-default" id="download-btn" onclick="download()">
+                    <span> D </span>
+                </button>
                 </div>
             </div>
             
             <div id="effect" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Documents
+                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Document statistics are updated based on activated stoplists/words.">?</button>
                 </div>
-                <div class="col-md-12 sub_section" id="sub_stats"> Before-after Stats </div>
-                <div class="col-md-12 sub_section" id="sub_vis"> Visualization </div>
+                <div class="col-md-12 sub_section" id="sub_stats">
+                    <table id="stats-table">
+                        <tr>
+                            <td class="stat-label">% of corpus</td>
+                            <td id="stat1" class="stat-inner">
+                                    <div class="progress"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="stat-label">Average doc. freq.</td>
+                            <td id="stat2" class="stat-inner">
+                                    <div class="progress"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="stat-label">Average freq.</td>
+                            <td id="stat3" class="stat-inner"></td>
+                        </tr>
+                    </table>
+                    
+<!--
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3" id="stats-title">
+                                <li> % of corpus </li>
+                                <li> - </li>
+                                <li> Average doc. freq. </li>
+                            </div>
+                            <div class="col-md-9" id="stats-inner">
+                                <li id="stat1">
+                                    <span></span>
+                                    <div class="progress"></div>
+                                </li>
+                                <li id="stat2">
+                                    <span></span>
+                                    <div class="progress"></div>
+                                </li>
+                                <li id="stat3"></li>
+                            </div>
+                        </div>
+                    </div>
+-->
+                </div>
+                <div class="col-md-12 sub_section" id="sub_vis"></div>
+                <div class="col-md-12" id="searchDiv"> 
+                    <input type="text" id="searchBar" onkeyup="queryDocuments()" placeholder="Search for document...">
+                </div>
                 <div class="col-md-12 sub_section" id="sub_documentList">
-                    <div class="d-flex flex-column" id="documents">
-                        <div id="search"> 
-                            <input type="text" id="searchBar" placeholder="Search for document...">
-                        </div>                       
+                    <div class="d-flex flex-column" id="documents">                    
                     </div>
                 </div>
             </div>
@@ -131,9 +178,10 @@
 </body>
     
 <script type="text/javascript">
-  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  var documentNames = {{ documentNames|tojson|safe }};
-  var stoplistNames = {{ stoplistNames|safe }};
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    var documentNames = {{ documentNames|tojson|safe }};
+    var stoplistNames = {{ stoplistNames|safe }};
+    var tokenStatistics = {{ tokenStatistics|tojson|safe }};
 </script>
     
 <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>

@@ -44,32 +44,24 @@ body {
     width: 100%;
     margin: 0;
     position: relative;
-    padding: 0 5px;
 }
 .stoplist:hover {
     background-color: #eee;
 }
 
 .metric {
-    height: 100%;
+    min-height: 100%;
     border-right: .5px solid grey;
 }
 
 .document {
     height: 60px;
     border-bottom: .5px solid grey;
-    padding: 0 5px;
     margin: 0;
     position: relative;
 }
 .document:hover {
     background-color: #eee;
-}
-
-.button_slot {
-    height: 100%;
-    width: 34%;
-    padding: 10px;
 }
 
 #sub_stoplist {
@@ -79,12 +71,15 @@ body {
 }
 #sec_metric {
     height: 40%;
+    padding: 0;
+    overflow: hidden;
 }
 #sub_metric{
     height: 100%;
+    overflow-y: scroll;
 }
 #sub_fullStoplist {
-    height: 85%;
+    height: 95%;
     padding: 5px;
 }
 #sub_buttonPanel {
@@ -99,7 +94,7 @@ body {
     border-bottom: 1px solid #ccc;
 }
 #sub_documentList {
-    height: 45%;
+    height: 40%;
     position: absolute;
     overflow-y: scroll;
 }
@@ -108,26 +103,24 @@ body {
     width: 100%;
     border: 0;
     border-bottom: 1px solid #ccc;
+    padding-left: 10px;
+}
+#searchDiv {
+    height: 5%;
 }
 
-.stop-metadata {
+.metadata {
     width: 100%;
+    height: 50%;
     font-size: 15px;
     cursor: default;
     padding: 0;
 }
-
-.stopword-preview {
+.preview {
     width: 100%;
+    height: 50%;
     color: gray;
     cursor: default;
-    padding: 0;
-}
-.hover-options {
-    font-size: 12px;
-    padding: 0;
-}
-.listcontentwrapper {
     padding: 0;
 }
 
@@ -141,6 +134,9 @@ body {
     border: .75px solid grey;
     border-radius: 5px;
 }
+.disabled-stopword {
+    background-color: lightgray;
+}
 
 #createStoplist-btn {
     position: absolute;
@@ -153,7 +149,6 @@ body {
     font-size: 20px;
     margin: 0px 4px;
 }
-
 .stopwordRemove-btn:focus {
     outline:0;
 }
@@ -166,7 +161,6 @@ body {
     top: 5%;
     padding: 2px;
 }
-
 .stoplistDelete-btn {
     position: absolute;
     font-size: 12px;
@@ -176,6 +170,80 @@ body {
     padding: 2px;
 }
 
-.stoplistInfoWrapper {
+.metric-title {
+    text-align: center;
+    border-bottom: .5px solid grey;
+    margin-bottom: 10px;
+}
+.metricStat {
+    float: right;
+    margin: 0px 5px;
+    overflow: hidden;
+}
+
+li {
+    list-style-type:none;
+}
+
+#download-btn {
+    position: absolute;
+    z-index: 1;
+    right: 3%;
+    top: 92%;
+}
+
+.tooltip {
+  font-size: 12px;
+}
+.helptip {
+    border-radius: 50%;
+    border: 2px solid lightgray;
+}
+.helptip:focus {
+  outline: none;
+}
+
+.hover-highlighted {
+    border: 2px solid grey;
+    font-weight: bold;
+}
+.stoplist-highlighted {
+    border: 1px solid grey;
+}
+
+.bars rect {
+    shape-rendering: crispEdges;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.axis {
+    fill: black;
+    stroke-width: 2px;
+    shape-rendering: crispEdges;
+}
+
+#stats-table {
+    font-size: 12px;
+    position: absolute;
+    width: 100%;
     height: 100%;
+    overflow: hidden;
+}
+#stats-table tr {
+    max-height: 10px;
+}
+.progress {
+    height: 12px;
+}
+.stat-label {
+    text-align: right;
+    border-right: .5px solid grey;
+    padding-right: 5px;
+    width: 23%;
+}
+.stat-inner {
+    padding: 0px 5px;
 }

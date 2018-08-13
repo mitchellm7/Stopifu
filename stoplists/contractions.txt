@@ -1,6 +1,4 @@
 contractions	gen	1
-i'd
-wouldn't
 i've
 you'll
 he'll
@@ -8,8 +6,7 @@ she'll
 i'll
 she'd
 would've
-couldn't
 could've
 he'd
 you've
-you'd
+wouldn't
