@@ -9,6 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
@@ -78,9 +80,7 @@
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stoplist">
                     <div class="d-flex flex-column" id="stoplists"></div>
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addStoplistPopup" id="createStoplist-btn">
-                        +
-                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addStoplistPopup" id="createStoplist-btn"> + </button>
                 </div>
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Metrics
@@ -139,29 +139,6 @@
                             <td id="stat3" class="stat-inner"></td>
                         </tr>
                     </table>
-                    
-<!--
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-3" id="stats-title">
-                                <li> % of corpus </li>
-                                <li> - </li>
-                                <li> Average doc. freq. </li>
-                            </div>
-                            <div class="col-md-9" id="stats-inner">
-                                <li id="stat1">
-                                    <span></span>
-                                    <div class="progress"></div>
-                                </li>
-                                <li id="stat2">
-                                    <span></span>
-                                    <div class="progress"></div>
-                                </li>
-                                <li id="stat3"></li>
-                            </div>
-                        </div>
-                    </div>
--->
                 </div>
                 <div class="col-md-12 sub_section" id="sub_vis"></div>
                 <div class="col-md-12" id="searchDiv"> 

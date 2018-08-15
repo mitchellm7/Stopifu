@@ -6,8 +6,11 @@ var documentSamples = [];
 var freqList = [];
 var lengthList = [];
 var tfidfList = [];
+var colors = d3.scale.category20();
 
-var test = [];
+var test = {};
+var test1 = {};
+var test2 = {};
 
 // Returns current date
 function getDate() {
@@ -19,14 +22,17 @@ function getDate() {
 }
 
 // Appends a word, other params, to sessionStopwords
-function addToSessionStopwords(word, inclusions, enabled, metricEnabled = false) {
-    stopwordIndices[word] = sessionStopwords.length;
-    sessionStopwords.push({
-        word: word,
-        inclusions: inclusions,
-        enabled: enabled,
-        metricEnabled: metricEnabled
-    });
+function addToSessionStopwords(word, inclusions, enabled, metricEnabled = false, appearances = []) {
+    if (!(word in stopwordIndices)) {
+        stopwordIndices[word] = sessionStopwords.length;
+        sessionStopwords.push({
+            word: word,
+            appearances: appearances,
+            inclusions: inclusions,
+            enabled: enabled,
+            metricEnabled: metricEnabled
+        });
+    }
 }
 
 // Downloads full stoplist
@@ -92,7 +98,7 @@ function updateStoplistEditVisuals(name) {
 
     stopwordElem.enter()
         .append("span")
-        .attr("class", function(d) { return "stopword stopword-" + d; })
+        .attr("class", function(d) { return "stopword stopword-" + d.replace(/[\W_]+/g,"_"); })
         .on("click", function(d) {
             e = window.event || e; 
             if(this === e.target) {
@@ -125,16 +131,16 @@ function updateOutputVisuals() {
 
     stopwordElem.enter()
         .append("span")
-        .attr("class", function(d) { return "stopword stopword-" + d.word; })
+        .attr("class", function(d) { return "stopword stopword-" + d.word.replace(/[\W_]+/g,"_"); })
         .text(function(d) { return d.word; })
-        .on("mouseover", function(d) { d3.selectAll(".stopword-" + d['word']).classed("hover-highlighted", true); })
-        .on("mouseout", function(d) { d3.selectAll(".stopword-" + d['word']).classed("hover-highlighted", false); })
+        .on("mouseover", function(d) { d3.selectAll(".stopword-" + d.word.replace(/[\W_]+/g,"_")).classed("hover-highlighted", true); })
+        .on("mouseout", function(d) { d3.selectAll(".stopword-" + d.word.replace(/[\W_]+/g,"_")).classed("hover-highlighted", false); })
         .append("button")
         .attr("class", "close stopwordRemove-btn")
         .append("span")
         .html("&times;")
         .on("click", function(d) {
-            d3.selectAll(".stopword-" + d['word']).classed("hover-highlighted", false);
+            d3.selectAll(".stopword-" + d.word.replace(/[\W_]+/g,"_")).classed("hover-highlighted", false);
             d.enabled = false;
             d.metricEnabled = false;
             updateOutputVisuals();
@@ -198,12 +204,18 @@ function toggleStoplistActivation(stoplistElem, name) {
     var stopwords = stoplist.stopwords;
     // Toggles activation
     if (!stoplist.active) {
-        d3.select(stoplistElem).classed("stoplist-highlighted", true);
-        for (i = 0; i < stopwords.length; i++) { sessionStopwords[stopwordIndices[stopwords[i]]].inclusions += 1; }
+        d3.select(stoplistElem).style("background-color", d=>colors(stoplistIndices[d.name]));
+        for (i = 0; i < stopwords.length; i++) {
+            sessionStopwords[stopwordIndices[stopwords[i]]].inclusions += 1;
+            sessionStopwords[stopwordIndices[stopwords[i]]].appearances.push(name);
+        }
     }
     else {
-        d3.select(stoplistElem).classed("stoplist-highlighted", false);
-        for (i = 0; i < stopwords.length; i++) { sessionStopwords[stopwordIndices[stopwords[i]]].inclusions -= 1; }
+        d3.select(stoplistElem).style("background-color", "");
+        for (i = 0; i < stopwords.length; i++) {
+            sessionStopwords[stopwordIndices[stopwords[i]]].inclusions -= 1;
+            sessionStopwords[stopwordIndices[stopwords[i]]].appearances.splice(sessionStopwords[stopwordIndices[stopwords[i]]].appearances.indexOf(name), 1);
+        }
     }
     stoplist.active = !stoplist.active;
     updateOutputVisuals();
@@ -253,7 +265,7 @@ function generateStoplistHTML(stoplistElem, name, category, date, stopwords) {
 }
 
 // Updates HTML elements for stoplists for stoplistList data 
-function updateStoplistVisuals() {
+function updateStoplistVisuals() {    
     var stoplistElem = d3.select("#stoplists").selectAll('.stoplist')
         .data(stoplistList.filter(function(d){ return d.deleted == false }), function(d) { return d.name; })
     
@@ -297,14 +309,54 @@ function generateDocumentHTML(documentElem, name, contents) {
     // Appends stoplistInfoWrapper containing metadata and stopword display
     d3.select(documentElem)
         .append("div")
-        .attr("class", "d-flex flex-column documentInfoWrapper-" + name.replace(/[\W_]+/g,"_"))
+            .attr("class", "d-flex flex-column documentInfoWrapper-" + name.replace(/[\W_]+/g,"_"))
+            .append("div")
+                .attr("class", "d-flex doc-header")
+                .append("div")
+                    .attr("class", "p-1 doc-metadata")
+                    .text(function() { return name; });
+    var documentBar = d3.select(".documentInfoWrapper-" + name.replace(/[\W_]+/g,"_")).select(".doc-header")
         .append("div")
-            .attr("class", "p-1 metadata")
-            .text(function() { return name; });
+        .attr("class", "progress doc-progress")
     var documentPreview = d3.select(".documentInfoWrapper-" + name.replace(/[\W_]+/g,"_"))
         .append("div")
-            .attr("class", "p-1 preview")
+            .attr("class", "p-1 doc-preview")
             .text(function() { return contents.substr(0, 50) + "..."; });
+}
+
+function updateDocumentBarVisuals(barContainer, stats, dict) {
+    var stoplistBar = d3.select(barContainer).select(".progress").selectAll(".progress-bar")
+        .data(stats)
+
+    stoplistBar.enter()
+        .append("div")
+        .attr("class", "progress-bar stoplistBar")
+        .attr("role", "progressbar")
+        .attr("data-toggle", "tooltip")
+        .attr("data-placement", "right");
+
+    stoplistBar
+        .style("width", function(d) { return d + "%" })
+        .attr("title", function(d) {
+            stoplist = Object.keys(dict).filter(function(key){ return dict[key] == stats.indexOf(d); })[0];
+            return stoplist + " : " + d + "%";
+        })
+        .style("background-color", function(d) {
+            stoplist = Object.keys(dict).filter(function(key){ return dict[key] == stats.indexOf(d); })[0];
+            if (stoplist == "metrics") { return "black"; }
+            else if (stoplist == "overlap") { return "darkgray"; } 
+            else { return colors(stoplistIndices[stoplist]); }
+        });
+
+    stoplistBar.exit().remove();
+}
+
+function updateAllDocumentBars(stats, dict) {
+    for (i in documentNames) {
+        docStats = []
+        for (j in stats) { docStats.push(stats[j][i]) }
+        updateDocumentBarVisuals(".documentInfoWrapper-" + documentNames[i].replace(/[\W_]+/g,"_"), docStats, dict)
+    }
 }
 
 // Updates HTML elements for documents
@@ -319,14 +371,14 @@ function updateDocumentVisuals(documents) {
         .each(function(d) { generateDocumentHTML(this, d.name, d.contents); });
     
     documentElem.exit().remove();
+    
+    generateStatisticDisplay();
 }
 
 // Queries the document list by title
 function queryDocuments() {
     var input = d3.select("#searchBar").property("value").toUpperCase();
-    queriedDocList = documentSamples.filter(function(d) {
-        return (d['name'].toUpperCase().indexOf(input) > -1);
-    })
+    queriedDocList = documentSamples.filter(function(d) { return (d['name'].toUpperCase().indexOf(input) > -1); })
     updateDocumentVisuals(queriedDocList);
 }
 
@@ -351,7 +403,7 @@ function updateMetricListVisuals(selector, metricList) {
     
     stopwordElem.enter()
         .append("li")
-        .attr("class", function(d) { return "stopword disabled-stopword stopword-" + d['word']; })
+        .attr("class", function(d) { return "stopword disabled-stopword stopword-" + d['word'].replace(/[\W_]+/g,"_"); })
         .text(function(d) {
             if (d['word'].length > 8) { return d['word'].substring(0, 8) + "..."; }
             else { return d['word']; }
@@ -407,12 +459,12 @@ function updateMetricListVisuals(selector, metricList) {
             updateVisualization();
         })
         .on("mouseover", function(d) {
-            d3.selectAll(".stopword-" + d['word']).classed("hover-highlighted", true);
+            d3.selectAll(".stopword-" + d['word'].replace(/[\W_]+/g,"_")).classed("hover-highlighted", true);
 //            for (i in stoplistList) {
 //                if (stoplistList[i].stopwords.includes(d['word'])) { d3.selectAll(".stoplist-name-" + stoplistList[i]['name']).classed("hover-highlighted", true); }
 //            }
         })
-        .on("mouseout", function(d) { d3.selectAll(".stopword-" + d['word']).classed("hover-highlighted", false); })
+        .on("mouseout", function(d) { d3.selectAll(".stopword-" + d['word'].replace(/[\W_]+/g,"_")).classed("hover-highlighted", false); })
         .append("span")
         .attr("class", "metricStat")
         .text(function(d) {
@@ -451,26 +503,14 @@ function generateMetrics() {
 // Generate statistic display
 function generateStatisticDisplay() {
     filteredList = sessionStopwords.filter(function(d){ return (d.inclusions > 0 || d.metricEnabled) && d.enabled === true; });
-    stopwordList = []
-    for (item in filteredList) { stopwordList.push(filteredList[item]['word']); }
-    var stopURL = '/get_statistics/' + JSON.stringify(stopwordList);
+    
+    var stopURL = '/get_statistics/' + JSON.stringify(filteredList);
     d3.json(stopURL, function(foo) {
-        d3.select("#stat1").select(".progress")
-            .each(function(d) {
-                if(d3.select(this).select(".stoplistBar").empty()) {
-                    d3.select(this).append("div")
-                        .attr("class", "progress-bar stoplistBar")
-                        .attr("role", "progressbar")
-                        .style("width", function(d) { return foo['stats'][0] + "%" })
-                        .attr("aria-valuemin", "0")
-                        .attr("aria-valuemax", "100");
-                }
-                else {
-                    d3.select(this).select(".stoplistBar")
-                        .style("width", function(d) { return foo['stats'][0] + "%" })
-                        .text(function(d) { return foo['stats'][0].substr(0, foo['stats'][0].length - 1) + "%"})
-                }
-            })
+        
+        updateAllDocumentBars(foo['stats'][4], foo['stats'][5]);
+        
+        updateDocumentBarVisuals("#stat1", foo['stats'][3], foo['stats'][5])
+        
         d3.select("#stat2").select(".progress")
             .each(function(d) {
                 if(d3.select(this).select(".stoplistBar").empty()) {
@@ -478,20 +518,20 @@ function generateStatisticDisplay() {
                         .attr("class", "progress-bar stoplistBar")
                         .attr("role", "progressbar")
                         .style("width", function(d) { return foo['stats'][2] + "%" })
-                        .attr("aria-valuemin", "0")
-                        .attr("aria-valuemax", "100");
+                        .style("background-color", "darkgray");
                 }
                 else {
                     d3.select(this).select(".stoplistBar")
                         .style("width", function(d) { return foo['stats'][2] + "%" })
-                        .text(function(d) { return foo['stats'][2] + "%" })
+                        .text(function(d) { if (foo['stats'][2] != "0") { return foo['stats'][2] + "%" } });
                 }
             })
+        
         d3.select("#stat3")
             .text(foo['stats'][1]);
+        
+        $(".stoplistBar").tooltip({delay: {show: 500, hide: 100}, animation: true, html: true});
     });
-    
-//    <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
 }
 
 // Gets specs (height, width, margins, x, y) for the visualization
@@ -570,7 +610,6 @@ function updateVisualization() {
     
     var stopURL = '/get_stopwordFreqs/' + JSON.stringify(stopwordList);
     d3.json(stopURL, function(foo) {
-        test = foo['stats'][1];
         var data = d3.layout.histogram()
             .bins(x.ticks(10))
             (foo['stats'][0]);
@@ -601,7 +640,14 @@ function updateVisualization() {
                     filteredList = Object.keys(foo['stats'][1]).filter(function(key){ return foo['stats'][1][key] == value; });
                     currDocs.push(filteredList);
                 }
-                alert(currDocs);
+                queriedDocList = []
+                for (i in documentSamples) {
+                    for (j in currDocs) {
+                        if (documentSamples[i].name == currDocs[j]) { queriedDocList.push(documentSamples[i]) }
+                    }
+                }
+            
+                updateDocumentVisuals(queriedDocList);
             });
         
         bars.select("text")

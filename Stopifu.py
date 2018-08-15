@@ -185,25 +185,60 @@ def getStatistics(fullList):
     
     tokensBefore = sum(tokenFreq)
     stopwordTokenSum = 0
-    stoplistFreqs = []
+    stopwordFreqs = []
     totalDocFreq = 0
+    stoplistFreqs = [0, 0]
+    stoplistDocFreqs = [[0] * len(tokenFreq), [0] * len(tokenFreq)]
+    stoplistIndices = {}
+    stoplistIndices['metrics'] = 0
+    stoplistIndices['overlap'] = 1
+    
     for word in fullList:
-        if word in termIndices:
-            stopwordTokenSum += tdm[termIndices[word]]['totalFreq']
-            stoplistFreqs.append(tdm[termIndices[word]]['totalFreq'])
-            for doc in tdm[termIndices[word]]['docFreqs']:
+        if word['word'] in termIndices:
+            stopwordTokenSum += tdm[termIndices[word['word']]]['totalFreq']
+            stopwordFreqs.append(tdm[termIndices[word['word']]]['totalFreq'])
+#                
+            for doc in tdm[termIndices[word['word']]]['docFreqs']:
                 if doc > 0:
-                    totalDocFreq +=1            
+                    totalDocFreq += 1
             
+            if word['appearances'] and len(word['appearances']) == 1:
+                stoplist = str(word['appearances'][0])
+                if stoplist in stoplistIndices:
+                    stoplistFreqs[stoplistIndices[stoplist]] += tdm[termIndices[word['word']]]['totalFreq']
+                    for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
+                        stoplistDocFreqs[stoplistIndices[stoplist]][i] += tdm[termIndices[word['word']]]['docFreqs'][i]
+                else:
+                    stoplistIndices[stoplist] = len(stoplistFreqs)
+                    stoplistFreqs.append(tdm[termIndices[word['word']]]['totalFreq'])
+                    stoplistDocFreqs.append([])
+                    for docFreq in tdm[termIndices[word['word']]]['docFreqs']:
+                        stoplistDocFreqs[stoplistIndices[stoplist]].append(docFreq)
+            elif word['appearances'] and len(word['appearances']) > 1:
+                stoplistFreqs[stoplistIndices['overlap']] += tdm[termIndices[word['word']]]['totalFreq']
+                for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
+                    stoplistDocFreqs[stoplistIndices['overlap']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]
+            else:
+                stoplistFreqs[stoplistIndices['metrics']] += tdm[termIndices[word['word']]]['totalFreq']
+                for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
+                    stoplistDocFreqs[stoplistIndices['metrics']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]       
+                
     stats[0] = str( round(stopwordTokenSum / float(tokensBefore), 5) * 100)
-    if len(stoplistFreqs) == 0:
+    if len(stopwordFreqs) == 0:
         stats[1] = str(0)
         stats[2] = str(0)
     else:
-        stats[1] = str(round((float(sum(stoplistFreqs)) / len(fullList)), 2))
+        stats[1] = str(round((float(sum(stopwordFreqs)) / len(fullList)), 2))
         stats[2] = str(round((float(totalDocFreq) / len(fullList))/len(tokenFreq), 3) * 100)
+        
+    for i in range(len(stoplistFreqs)):
+        stoplistFreqs[i] = str( round(stoplistFreqs[i] / float(tokensBefore), 5) * 100)
+        for j in range(len(stoplistDocFreqs[i])):
+            stoplistDocFreqs[i][j] = round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100
     
-    
+    stats.append(stoplistFreqs)
+    stats.append(stoplistDocFreqs)
+    stats.append(stoplistIndices)
     return jsonify({ 'stats' : stats})
 
 
