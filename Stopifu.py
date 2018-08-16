@@ -234,7 +234,7 @@ def getStatistics(fullList):
     for i in range(len(stoplistFreqs)):
         stoplistFreqs[i] = str( round(stoplistFreqs[i] / float(tokensBefore), 5) * 100)
         for j in range(len(stoplistDocFreqs[i])):
-            stoplistDocFreqs[i][j] = round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100
+            stoplistDocFreqs[i][j] = str(round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100)
     
     stats.append(stoplistFreqs)
     stats.append(stoplistDocFreqs)

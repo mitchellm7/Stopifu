@@ -204,8 +204,8 @@ li {
 }
 
 .hover-highlighted {
-    border: 2px solid grey;
-    font-weight: bold;
+    box-shadow: 0 0 0 1pt grey;
+/*    font-weight: bold;*/
 }
 .stoplist-highlighted {
     border: 1px solid grey;
@@ -216,13 +216,21 @@ li {
 }
 .axis path, .axis line {
     fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
+    stroke: dimgray;
+    stroke-width: 0.7px;
 }
 .axis {
-    fill: black;
-    stroke-width: 2px;
+    fill: dimgray;
     shape-rendering: crispEdges;
+    font-size: 13px;
+}
+.axis-label {
+    font-size: 14px;
+    fill: dimgray;
+}
+.bar-label {
+    font-size: 12px;
+    fill: white;
 }
 
 #stats-table {
@@ -246,10 +254,8 @@ li {
 }
 .stat-inner {
     padding: 0px 5px;
-}
-
-.progress-bar {
-    pointer-events: none !imporatant;
+    color: dimgray;
+    font-weight: 600;
 }
 
 .doc-metadata {
@@ -267,6 +273,6 @@ li {
     padding: 0;
 }
 .doc-progress {
-    margin: 8px 2px;
+    margin: 8px;
     width: 60%;
 }

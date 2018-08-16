@@ -331,20 +331,22 @@ function updateDocumentBarVisuals(barContainer, stats, dict) {
     stoplistBar.enter()
         .append("div")
         .attr("class", "progress-bar stoplistBar")
-        .attr("role", "progressbar")
-        .attr("data-toggle", "tooltip")
-        .attr("data-placement", "right");
+        .attr("role", "progressbar");
 
     stoplistBar
+        .attr("data-toggle", "tooltip")
+        .attr("data-placement", "right")
         .style("width", function(d) { return d + "%" })
+        .attr(":value", function(d) { return d + "%" })
         .attr("title", function(d) {
             stoplist = Object.keys(dict).filter(function(key){ return dict[key] == stats.indexOf(d); })[0];
             return stoplist + " : " + d + "%";
         })
+//        .text(function(d) { if (parseInt(d) > 10.0) { return d.toString().substring(0, d.length - 2) + "%" } })
         .style("background-color", function(d) {
             stoplist = Object.keys(dict).filter(function(key){ return dict[key] == stats.indexOf(d); })[0];
-            if (stoplist == "metrics") { return "black"; }
-            else if (stoplist == "overlap") { return "darkgray"; } 
+            if (stoplist == "metrics") { return "salmon"; }
+            else if (stoplist == "overlap") { return "dimgray"; } 
             else { return colors(stoplistIndices[stoplist]); }
         });
 
@@ -518,7 +520,7 @@ function generateStatisticDisplay() {
                         .attr("class", "progress-bar stoplistBar")
                         .attr("role", "progressbar")
                         .style("width", function(d) { return foo['stats'][2] + "%" })
-                        .style("background-color", "darkgray");
+                        .style("background-color", "dimgray");
                 }
                 else {
                     d3.select(this).select(".stoplistBar")
@@ -582,19 +584,20 @@ function generateVisualization() {
         .attr("transform", "translate(0, 0)")
         .attr("class", "axis")
         .call(yAxis);
-    svg.append("text")             
+    svg.append("text") 
+        .attr("class", "axis-label")
         .attr("transform",
-            "translate(" + (width/2) + " ," + (height + margin.top + 20) + ")")
+            "translate(" + (width/2) + " ," + (height + margin.top + 17) + ")")
         .style("text-anchor", "middle")
         .text("% Stopwords");
-    
     svg.append("text")
-      .attr("transform", "rotate(-90), translate(0, 5)")
-      .attr("y", 0 - margin.left/2)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("# of Documents");
+        .attr("class", "axis-label")
+        .attr("transform", "rotate(-90), translate(0, 8)")
+        .attr("y", 0 - margin.left/2)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("# of Documents");
     
     updateVisualization()
 }
@@ -618,11 +621,11 @@ function updateVisualization() {
         bars.enter()
             .append("g")
             .attr("class", "bar")
-            .attr("transform", function(d) { return "translate(" + (margin.left + 0.5) + "," + (margin.top - 1.25) + ")"; })
+            .attr("transform", function(d) { return "translate(" + (margin.left + 0.25) + "," + (margin.top - .4) + ")"; })
             .each(function() {
                 d3.select(this)
                     .append("rect")
-                    .attr("fill", "steelblue");
+                    .attr("fill", "dimgray");
                 d3.select(this)
                     .append("text")
                     .attr("text-anchor", "middle")
@@ -651,7 +654,8 @@ function updateVisualization() {
             });
         
         bars.select("text")
-            .attr("dy", "14px")
+            .attr("class", "bar-label")
+            .attr("dy", "12px")
             .attr("dx", function(d) { return x(d.dx) / 2; })
             .attr("x", function(d) { return x(d.x); })
             .attr("y", function(d) { return y(d.y); })
@@ -673,6 +677,6 @@ window.onload = function() {
     generateVisualization();
     
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip({delay: {show: 500, hide: 100}, animation: true, html: true}); 
+        $('[data-toggle="tooltip"]').tooltip({delay: {show: 300, hide: 50}, animation: true, html: true}); 
     });
 }
