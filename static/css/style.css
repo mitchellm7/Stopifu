@@ -3,9 +3,18 @@ body {
 }
 .container-fluid {
     height: 100%;
+    width: 100%;
+}
+#branding {
+    height: 6%;
+    background-color: white;
+    color: dimgrey;
+    padding-left: 10px;
+    font-size: 20px;
+    border-bottom: 1px solid lightgray;
 }
 .row {
-    height: 100%;
+    height: 94%;
 }
 .col-md-5, .col-md-2{
     padding: 0;
@@ -67,7 +76,7 @@ body {
 #sub_stoplist {
     height: 50%;
     border-bottom: 1px solid #ccc;
-/*    overflow-y: scroll;*/
+    overflow-y: auto;
 }
 #sec_metric {
     height: 40%;
@@ -81,12 +90,16 @@ body {
 #sub_fullStoplist {
     height: 95%;
     padding: 5px;
+    overflow-y: auto;
+}
+#empty_warning {
+    color: gray;
 }
 #sub_buttonPanel {
     height: 10%
 }
 #sub_stats {
-    height: 10%;
+    height: 12%;
     border-bottom: 1px solid #ccc;
 }
 #sub_vis {
@@ -94,9 +107,9 @@ body {
     border-bottom: 1px solid #ccc;
 }
 #sub_documentList {
-    height: 40%;
+    height: 38%;
     position: absolute;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #searchBar{
@@ -185,10 +198,20 @@ li {
     list-style-type:none;
 }
 
+#modalHelperHolder {
+/*    width: ;*/
+}
+
 #download-btn {
     position: absolute;
     z-index: 1;
     right: 3%;
+    top: 92%;
+}
+#clear-btn {
+    position: absolute;
+    z-index: 1;
+    right: 23%;
     top: 92%;
 }
 

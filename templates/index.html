@@ -19,6 +19,25 @@
     
     
 <body>
+    <div class="modal fade" id="majorModalHelper" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" id="modalHelperHolder" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Stopifu </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"> 
+                    <img src="{{ url_for('static', filename='majorModalHelper.PNG') }}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="addStoplistPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -72,11 +91,13 @@
     </div>
     
     <div class="container-fluid" aria-hidden="true">
+        
+        <div class="row" id="branding"> Stopifu </div>
         <div class="row">
             <div id="cause" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
-                    Stoplists
-                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a stoplist to activate it.">?</button>
+                    Sublists
+                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a stoplist to activate/deactivate.">?</button>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stoplist">
                     <div class="d-flex flex-column" id="stoplists"></div>
@@ -90,13 +111,13 @@
                     <div class="container-fluid" aria-hidden="true" id="sub_metric">
                         <div class="row">
                             <div class="col-md-4 metric" id="freqList"> 
-                                <div class="metric-title"> By Frequency </div>
+                                <div class="metric-title"> By frequency </div>
                             </div>
                             <div class="col-md-4 metric" id="lengthList"> 
-                                <div class="metric-title"> By Length </div>
+                                <div class="metric-title"> By length </div>
                             </div>
                             <div class="col-md-4 metric" id="tfidfList"> 
-                                <div class="metric-title" data-toggle="tooltip" data-placement="left" title="Term Frequency Inverse Document Frequency shows the importance of a word to a specific doc. in a corpus."> By Max. TFIDF </div>
+                                <div class="metric-title" data-toggle="tooltip" data-placement="left" title="Term Frequency Inverse Document Frequency shows the importance of a word to a specific doc. in a corpus."> By max. tf-idf </div>
                             </div>
                         </div>
                     </div>
@@ -105,44 +126,48 @@
             
             <div id="output" class="col-md-2">
                 <div class="col-md-12 sec_title navbar navbar-default">
-                    Output
+                    Final Stoplist
                     <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click 'x' to disable a stopword.<br> Click the download button to save the stoplist.">?</button>
                 </div>
                 <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist">
+                    <span id="empty_warning"> No stopwords selected. </span>
                     <button type="button" class="btn btn-default" id="download-btn" onclick="download()">
                     <span> D </span>
-                </button>
+                    </button>
+                    <button type="button" class="btn btn-default" id="clear-btn" onclick="clearStoplist()">
+                    <span> C </span>
+                    </button>
                 </div>
             </div>
             
             <div id="effect" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
-                    Documents
+                    Corpus
                     <button class="helptip" data-toggle="tooltip" data-placement="left" title="Document statistics are updated based on activated stoplists/words.">?</button>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stats">
                     <table id="stats-table">
                         <tr>
-                            <td class="stat-label">% of corpus</td>
+                            <td class="stat-label" data-toggle="tooltip" data-placement="bottom" title="Compares selected sublists (and metric-selected stopwords) by percent of the corpus they take up.">% of corpus</td>
                             <td id="stat1" class="stat-inner">
                                     <div class="progress"></div>
                             </td>
                         </tr>
                         <tr>
-                            <td class="stat-label">Average doc. freq.</td>
+                            <td class="stat-label" data-toggle="tooltip" data-placement="bottom" title="Average precentage of documents in which selected stopwords appear.">Average doc. freq.</td>
                             <td id="stat2" class="stat-inner">
                                     <div class="progress"></div>
                             </td>
                         </tr>
                         <tr>
-                            <td class="stat-label">Average freq.</td>
+                            <td class="stat-label" data-toggle="tooltip" data-placement="bottom" title="Average total appearances of selected stopwords.">Average freq.</td>
                             <td id="stat3" class="stat-inner"></td>
                         </tr>
                     </table>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_vis"></div>
                 <div class="col-md-12" id="searchDiv"> 
-                    <input type="text" id="searchBar" onkeyup="queryDocuments()" placeholder="Search for document...">
+                    <input type="text" id="searchBar" onkeyup="queryDocuments()" placeholder="Search documents by title...">
                 </div>
                 <div class="col-md-12 sub_section" id="sub_documentList">
                     <div class="d-flex flex-column" id="documents">                    

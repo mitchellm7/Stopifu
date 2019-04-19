@@ -1,0 +1,9 @@
+conjunctions	general	8-20-2018
+for
+nor
+but
+or
+yet
+so
+and
+

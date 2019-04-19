@@ -1,3 +1,6 @@
-articles	gen	1
+articles	general	8-20-2018
 a
 the
+an
+nor
+sds

@@ -8,9 +8,7 @@ var lengthList = [];
 var tfidfList = [];
 var colors = d3.scale.category20();
 
-var test = {};
-var test1 = {};
-var test2 = {};
+var test = [];
 
 // Returns current date
 function getDate() {
@@ -44,6 +42,28 @@ function download() {
     }
     var stopURL = '/download/' + JSON.stringify(stopwordList);
     d3.json(stopURL, function(foo) { });
+}
+
+// Clears full stoplist
+function clearStoplist() {    
+    d3.select("#stoplists").selectAll('.stoplist').style("background-color", "");
+    d3.select("#freqList").selectAll('.stopword').classed("disabled-stopword", true);
+    d3.select("#lengthList").selectAll('.stopword').classed("disabled-stopword", true);
+    d3.select("#tfidfList").selectAll('.stopword').classed("disabled-stopword", true);
+    
+    
+    for (var i = 0; i < stoplistList.length; i++) {
+        if (stoplistList[i].active == true) {
+            stoplistList[i].active = false;
+        }
+    }
+    for (var i = 0; i < sessionStopwords.length; i++) {
+        sessionStopwords[i].inclusions = 0;
+        sessionStopwords[i].appearances = [];
+        sessionStopwords[i].metricEnabled = false;
+    }
+    
+    updateVisuals();
 }
 
 // Reveals addStoplistPopup and creates stoplist from input (adds text file and to stoplistList)
@@ -102,9 +122,18 @@ function updateStoplistEditVisuals(name) {
         .on("click", function(d) {
             e = window.event || e; 
             if(this === e.target) {
-                d3.select(this).classed("disabled-stopword", !d3.select(this).classed("disabled-stopword"));
-                sessionStopwords[stopwordIndices[d]].enabled = !sessionStopwords[stopwordIndices[d]].enabled;
-                sessionStopwords[stopwordIndices[d]].metricEnabled = !sessionStopwords[stopwordIndices[d]].metricEnabled;
+                if (sessionStopwords[stopwordIndices[d]].enabled) {
+                    d3.select(this).classed("disabled-stopword", true);
+                    sessionStopwords[stopwordIndices[d]].enabled = false;
+                    sessionStopwords[stopwordIndices[d]].metricEnabled = false;
+                }
+                else {
+                    d3.select(this).classed("disabled-stopword", false);
+                    sessionStopwords[stopwordIndices[d]].enabled = true;                  
+                }
+//                d3.select(this).classed("disabled-stopword", !d3.select(this).classed("disabled-stopword"));
+//                sessionStopwords[stopwordIndices[d]].enabled = !sessionStopwords[stopwordIndices[d]].enabled;
+//                sessionStopwords[stopwordIndices[d]].metricEnabled = !sessionStopwords[stopwordIndices[d]].metricEnabled;
             }
         })
     stopwordElem.text(function(d) { return d; })
@@ -143,13 +172,34 @@ function updateOutputVisuals() {
             d3.selectAll(".stopword-" + d.word.replace(/[\W_]+/g,"_")).classed("hover-highlighted", false);
             d.enabled = false;
             d.metricEnabled = false;
-            updateOutputVisuals();
-            updateMetricDisplay();
-            generateStatisticDisplay();
-            updateVisualization();
+            updateVisuals();
         });
+    
+    stopwordElem
+        .attr("data-toggle", "tooltip")
+        .attr("data-placement", "right")
+        .attr("title", function(d) {
+            if (d.metricEnabled && d.appearances.length == 0) {
+                return "Enabled by: metrics";
+            }
+            else if (d.metricEnabled) {
+                return "Enabled by: metrics, " + d.appearances.join(", ");
+            }
+            else {
+                return "Enabled by: " + d.appearances.join(", ");
+            }
+        })
 
     stopwordElem.exit().remove();
+    
+    if (activeStopwords.length > 0) {
+        d3.select("#empty_warning").style("display", "none");
+    }
+    else {
+        d3.select("#empty_warning").style("display", "block");
+    }
+    
+//    $(".stopword").tooltip({delay: {show: 500, hide: 100}, animation: true, html: true});
 }
 
 // Deletes a stoplist (from stoplist file and stoplistList)
@@ -161,7 +211,7 @@ function deleteStoplist(name) {
         });
         stoplistList[stoplistIndices[name]].deleted = true;
         delete stoplistIndices[name];
-        updateStoplistVisuals();
+        updateVisuals();
     }
 }
 
@@ -188,9 +238,7 @@ function generateStoplistEditDisplay(name) {
         $('#stoplistEditform').val('');
     });
     d3.select("#closeEdit-btn").on("click", function() {
-        updateStoplistVisuals();
-        updateMetricDisplay();
-        updateOutputVisuals();
+        updateVisuals();
     });
     
     updateStoplistEditVisuals(name);
@@ -218,10 +266,15 @@ function toggleStoplistActivation(stoplistElem, name) {
         }
     }
     stoplist.active = !stoplist.active;
+    updateVisuals();
+}
+
+function updateVisuals() {
+    updateStoplistVisuals();
     updateOutputVisuals();
     updateMetricDisplay();
-    generateStatisticDisplay();
     updateVisualization();
+    generateStatisticDisplay();
 }
 
 // Generates HTML and CSS for a stoplist element (uses only params as data)
@@ -455,10 +508,7 @@ function updateMetricListVisuals(selector, metricList) {
                 currWord.enabled = toggledActivation;
                 d3.select(this).classed("disabled-stopword", !d3.select(this).classed("disabled-stopword"));
             }
-            updateOutputVisuals();
-            updateMetricDisplay();
-            generateStatisticDisplay();
-            updateVisualization();
+            updateVisuals();
         })
         .on("mouseover", function(d) {
             d3.selectAll(".stopword-" + d['word'].replace(/[\W_]+/g,"_")).classed("hover-highlighted", true);
@@ -498,8 +548,6 @@ function generateMetrics() {
     freqList = tokenStatistics.slice().sort(function (a, b) { return b['totalFreq'] - a['totalFreq']; }).slice(0,1000);
     lengthList = tokenStatistics.slice().sort(function (a, b) { return a['word'].length - b['word'].length; }).slice(0,1000);
     tfidfList = tokenStatistics.slice().sort(function (a, b) { return Math.max.apply(Math, b['tfidf']) - Math.max.apply(Math, a['tfidf']); }).slice(0,1000);
-    
-    updateMetricDisplay();
 }
 
 // Generate statistic display
@@ -598,8 +646,6 @@ function generateVisualization() {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("# of Documents");
-    
-    updateVisualization()
 }
 
 // Updates content of histogram based on sessionStopwords
@@ -675,6 +721,8 @@ window.onload = function() {
     generateMetrics();
     generateStatisticDisplay();
     generateVisualization();
+    updateVisuals();
+    $('#majorModalHelper').modal('show');
     
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip({delay: {show: 300, hide: 50}, animation: true, html: true}); 

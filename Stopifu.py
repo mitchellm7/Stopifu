@@ -5,11 +5,13 @@ import json
 from TDMmaker import make_term_document_matrix, getTokenFreq
 import math
 import csv
+import sys
 
 app = Flask(__name__)
 tdm = []
 termIndices = {}
 tokenFreq = []
+docDir = ""
 
 # Creates an output file from list of stopwords parameter
 @app.route('/download/<fullList>')
@@ -128,9 +130,9 @@ def getDocumentSample(path, name, jsonifyCheck = True):
 @app.route('/get_all_documents/')
 def getAllDocuments():
     allDocuments = []
-    documentNames = getDocumentNames("docTestDir/")
+    documentNames = getDocumentNames(docDir)
     for documentName in documentNames:
-        allDocuments.append(getDocumentSample("docTestDir/", documentName, False))
+        allDocuments.append(getDocumentSample(docDir, documentName, False))
     return jsonify({  'allDocuments':allDocuments })
     
 # Returns names of all stoplist files in stoplist directory
@@ -167,7 +169,7 @@ def addTFIDF(tdm, tokenFreq, numDocs):
 def getMetrics(path, wIndices = False):
     # Get # of docs and token frequency list for docs
     numDocs = len(getDocumentNames(path))
-    tokenFreq = getTokenFreq("docTestDir/")
+    tokenFreq = getTokenFreq(docDir)
     # Create term document matrix, add TFIDF for each token
     tdm, termIndices = make_term_document_matrix(path)
     addTFIDF(tdm, tokenFreq, numDocs)
@@ -222,7 +224,7 @@ def getStatistics(fullList):
                 stoplistFreqs[stoplistIndices['metrics']] += tdm[termIndices[word['word']]]['totalFreq']
                 for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
                     stoplistDocFreqs[stoplistIndices['metrics']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]       
-                
+    print (tokensBefore)            
     stats[0] = str( round(stopwordTokenSum / float(tokensBefore), 5) * 100)
     if len(stopwordFreqs) == 0:
         stats[1] = str(0)
@@ -234,6 +236,7 @@ def getStatistics(fullList):
     for i in range(len(stoplistFreqs)):
         stoplistFreqs[i] = str( round(stoplistFreqs[i] / float(tokensBefore), 5) * 100)
         for j in range(len(stoplistDocFreqs[i])):
+            print tokenFreq[j]
             stoplistDocFreqs[i][j] = str(round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100)
     
     stats.append(stoplistFreqs)
@@ -245,7 +248,7 @@ def getStatistics(fullList):
 @app.route('/get_stopwordFreqs/<fullList>')
 def getStopwordFreqs(fullList):
     fullList = json.loads(fullList)
-    documentNames = getDocumentNames("docTestDir/")
+    documentNames = getDocumentNames(docDir)
     
     numDocs = len(tokenFreq)
     stopwordFreqDict = {}
@@ -267,12 +270,17 @@ def getStopwordFreqs(fullList):
 @app.route('/')
 def home():
     return render_template('index.html',
-                            documentNames = getDocumentNames("docTestDir/"),
+                            documentNames = getDocumentNames(docDir),
                             stoplistNames = getStoplistNames(),
                             tokenStatistics = tdm)
     
 if __name__ == '__main__':
-    tdm, termIndices, tokenFreq = getMetrics("docTestDir/", True)
+    if os.path.isdir(sys.argv[1]):
+        docDir = sys.argv[1]
+        tdm, termIndices, tokenFreq = getMetrics(docDir, True)
+        app.run(debug = True)
+    else: 
+        print "Invalid directory path."
     
 #    tdm = getMetrics("docTestDir/")
 #    with open('test1.csv', 'wb+') as stats:
@@ -281,5 +289,3 @@ if __name__ == '__main__':
 #        csvWriter.writerow(firstRow)
 #        for word in tdm:
 #            csvWriter.writerow([word['word']] + [word['totalFreq']] + word['docFreqs'] + word['tfidf'])
-    
-    app.run(debug = True)
