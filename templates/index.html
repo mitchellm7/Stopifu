@@ -20,7 +20,7 @@
     
 <body>
     <div class="modal fade" id="majorModalHelper" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" id="modalHelperHolder" role="document">
+        <div class="modal-dialog modal-lg" id="modalHelperHolder">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> Stopifu </h5>
@@ -29,12 +29,14 @@
                     </button>
                 </div>
                 <div class="modal-body"> 
-                    <img src="{{ url_for('static', filename='majorModalHelper.PNG') }}">
+                    <img id="modalImage" src="{{ url_for('static', filename='majorModalHelper.PNG') }}">
                 </div>
 
+<!--
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Get Started</button>
                 </div>
+-->
             </div>
         </div>
     </div>

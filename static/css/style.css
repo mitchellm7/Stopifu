@@ -199,7 +199,11 @@ li {
 }
 
 #modalHelperHolder {
-/*    width: ;*/
+    min-width: 1050px;
+}
+
+#modalImage {
+    width: 1000px;
 }
 
 #download-btn {
