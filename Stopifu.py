@@ -224,7 +224,7 @@ def getStatistics(fullList):
                 stoplistFreqs[stoplistIndices['metrics']] += tdm[termIndices[word['word']]]['totalFreq']
                 for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
                     stoplistDocFreqs[stoplistIndices['metrics']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]       
-    print (tokensBefore)            
+    print(tokensBefore)            
     stats[0] = str( round(stopwordTokenSum / float(tokensBefore), 5) * 100)
     if len(stopwordFreqs) == 0:
         stats[1] = str(0)
@@ -236,7 +236,7 @@ def getStatistics(fullList):
     for i in range(len(stoplistFreqs)):
         stoplistFreqs[i] = str( round(stoplistFreqs[i] / float(tokensBefore), 5) * 100)
         for j in range(len(stoplistDocFreqs[i])):
-            print tokenFreq[j]
+            print(tokenFreq[j])
             stoplistDocFreqs[i][j] = str(round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100)
     
     stats.append(stoplistFreqs)
@@ -276,14 +276,22 @@ def home():
     
 if __name__ == '__main__':
     docDir = sys.argv[1]
-    if docDir[-1] != "\\":
-        docDir = docDir + "\\"
+    #if docDir[-1] != "\\":
+    #    docDir = docDir + "\\"
         
+    print(docDir)
+
     if os.path.isdir(docDir):
         tdm, termIndices, tokenFreq = getMetrics(docDir, True)
-        app.run(debug = True)
+        
+        if len(sys.argv) == 2:
+            app.run(debug = True)
+        else:
+            host = sys.argv[2]
+            port = int(sys.argv[3])
+            app.run(host=host, port=port, debug=True)
     else: 
-        print "Invalid directory path."
+        print("Invalid directory path.")
     
 #    tdm = getMetrics("docTestDir/")
 #    with open('test1.csv', 'wb+') as stats:
