@@ -6,9 +6,12 @@ var documentSamples = [];
 var freqList = [];
 var lengthList = [];
 var tfidfList = [];
-var colors = d3.scale.category20();
+var colors = d3.scale.category10();
 
-var test = [];
+var color = d3.scale.ordinal()
+  .range(["rgb(80,84,177)", "rgb(234,195,40)", "rgb(147,84,231)", "rgb(85,147,16)", "rgb(212,82,168)", "rgb(100,141,114)", "rgb(251,45,76)", "rgb(66,137,192)", "rgb(194,87,32)", "rgb(184,129,154)"]);
+
+var test;
 
 // Returns current date
 function getDate() {
@@ -42,6 +45,7 @@ function download() {
     }
     var stopURL = '/download/' + JSON.stringify(stopwordList);
     d3.json(stopURL, function(foo) { });
+    alert("Stoplist saved to output folder within Stopifu directory.");
 }
 
 // Clears full stoplist
@@ -61,6 +65,7 @@ function clearStoplist() {
         sessionStopwords[i].inclusions = 0;
         sessionStopwords[i].appearances = [];
         sessionStopwords[i].metricEnabled = false;
+        sessionStopwords[i].enabled = true;
     }
     
     updateVisuals();
@@ -72,8 +77,8 @@ function createStoplist() {
     var category = d3.select("#createStoplistCategory").property("value").trim();
     var stopwords = d3.select("#createStoplistWords").property("value").trim().split(" ");
     var date = getDate();
-
-    if (name != "" && category != "") {
+    
+    if (name != "" && category != "" && !(name in stoplistIndices)) {
         var stopURL = '/create_stoplist/' + name + '/' + category + '/' + date;
         d3.json(stopURL, function(foo) {
             for (var i = 0; i < stopwords.length; i++) {
@@ -97,6 +102,9 @@ function createStoplist() {
             deleted: false
         });
         updateStoplistVisuals();
+    }
+    else {
+        alert("Fill in both the name and category section and ensure the stoplist name is unique.");
     }
 }
 
@@ -124,18 +132,18 @@ function updateStoplistEditVisuals(name) {
             if(this === e.target) {
                 if (sessionStopwords[stopwordIndices[d]].enabled) {
                     d3.select(this).classed("disabled-stopword", true);
+                    d3.select(this).classed("progress-bar-striped", true);
                     sessionStopwords[stopwordIndices[d]].enabled = false;
                     sessionStopwords[stopwordIndices[d]].metricEnabled = false;
                 }
                 else {
                     d3.select(this).classed("disabled-stopword", false);
+                    d3.select(this).classed("progress-bar-striped", false);
                     sessionStopwords[stopwordIndices[d]].enabled = true;                  
                 }
-//                d3.select(this).classed("disabled-stopword", !d3.select(this).classed("disabled-stopword"));
-//                sessionStopwords[stopwordIndices[d]].enabled = !sessionStopwords[stopwordIndices[d]].enabled;
-//                sessionStopwords[stopwordIndices[d]].metricEnabled = !sessionStopwords[stopwordIndices[d]].metricEnabled;
             }
-        })
+        }) 
+        
     stopwordElem.text(function(d) { return d; })
     stopwordElem.append("button")
         .attr("class", "close stopwordRemove-btn")
@@ -145,6 +153,10 @@ function updateStoplistEditVisuals(name) {
             removeStopword(name, d);
         });
     stopwordElem.classed("disabled-stopword", function(d) {
+            if ((d in stopwordIndices) && !sessionStopwords[stopwordIndices[d]].enabled) { return true; }
+            else { return false; }
+        });
+    stopwordElem.classed("progress-bar-striped", function(d) {
             if ((d in stopwordIndices) && !sessionStopwords[stopwordIndices[d]].enabled) { return true; }
             else { return false; }
         });
@@ -252,7 +264,7 @@ function toggleStoplistActivation(stoplistElem, name) {
     var stopwords = stoplist.stopwords;
     // Toggles activation
     if (!stoplist.active) {
-        d3.select(stoplistElem).style("background-color", d=>colors(stoplistIndices[d.name]));
+        d3.select(stoplistElem).style("background-color", d=>color(stoplistIndices[d.name]));
         for (i = 0; i < stopwords.length; i++) {
             sessionStopwords[stopwordIndices[stopwords[i]]].inclusions += 1;
             sessionStopwords[stopwordIndices[stopwords[i]]].appearances.push(name);
@@ -281,40 +293,53 @@ function updateVisuals() {
 function generateStoplistHTML(stoplistElem, name, category, date, stopwords) {
     // Allows hover for stoplist element
     d3.select(stoplistElem)
-        .on('mouseover', function() { $(stoplistElem).children(".btn").show(); })
-        .on('mouseout', function() { $(stoplistElem).children(".btn").hide(); })
+        .on('mouseover', function() { $(stoplistElem).children("i").show(); })
+        .on('mouseout', function() { $(stoplistElem).children("i").hide(); });
     // Appends stoplistInfoWrapper containing metadata and stopword display
     var stoplistInfoWrapper = d3.select(stoplistElem)
         .append("div")
         .attr("class", "d-flex flex-column stoplistInfoWrapper-" + name)
         .on("click" , function() { toggleStoplistActivation(stoplistElem, name); })
         .append("div")
-            .attr("class", "p-1 metadata")
+        .attr("class", "d-flex flex-row metadata stoplistMetadataWrapper-" + name);
+    
+    var stopListMetaData = d3.select(".stoplistMetadataWrapper-" + name)
+        .append("div")
+            .attr("class", "p-1 metadata-1")
             .text(function() {
-                if (name.length + category.length + date.length > 30) { return name.substring(0, 15) + "..."; } 
-                else { return name + "\t / \t" + category + "\t / \t" + date; }
+                return name;
+            });
+    var stoplistMetadata = d3.select(".stoplistMetadataWrapper-" + name)
+        .append("div")
+            .attr("class", "p-1 metadata-2")
+            .text(function() {
+                return category + " " + date;
             });
     var stopwordPreview = d3.select(".stoplistInfoWrapper-" + name)
         .append("div")
-            .attr("class", "p-1 preview")
+            .attr("class", "d-flex flex-row")
+            .append("div")
+                .attr("class", "p-1 preview");
     // Appends (hover-only) edit and delete buttons
     var editBtn = d3.select(stoplistElem)
-        .append("button")
-        .attr("class", "btn stoplistEdit-btn")
-        .text("edit")
+        .append("i")
+        .attr("class", "fas fa-edit stoplistEdit")
+        .attr("title", "Edit stoplist.")
         .on("click", function() {
             if (stoplistList[stoplistIndices[name]].active) { toggleStoplistActivation(stoplistElem, name); }
             generateStoplistEditDisplay(name);
-        })
+        });
+    
     var deleteBtn = d3.select(stoplistElem)
-        .append("button")
-        .attr("class", "btn btn-danger stoplistDelete-btn")
-        .text("delete")
+        .append("i")
+        .attr("class", "fas fa-trash stoplistDelete")
+        .attr("title", "Delete stoplist.")
         .on("click", function() {
             if (stoplistList[stoplistIndices[name]].active) { toggleStoplistActivation(stoplistElem, name); }
             deleteStoplist(name);
         });
-    $(stoplistElem).children(".btn").hide();
+    
+    $(stoplistElem).children("i").hide();
 }
 
 // Updates HTML elements for stoplists for stoplistList data 
@@ -328,8 +353,7 @@ function updateStoplistVisuals() {
         .each(function(d) { generateStoplistHTML(this, d.name, d.category, d.date, d.stopwords); });
     stoplistElem.select(".preview")
         .text(function(d) {
-                if (d.stopwords.length > 8) { return d.stopwords.slice(0, 8).join(", ") + "..."; } 
-                else { return d.stopwords.slice(0, d.stopwords.length).join(", "); }
+                return d.stopwords.slice(0, d.stopwords.length).join(", ");
             })
     
     stoplistElem.exit().remove();
@@ -374,7 +398,7 @@ function generateDocumentHTML(documentElem, name, contents) {
     var documentPreview = d3.select(".documentInfoWrapper-" + name.replace(/[\W_]+/g,"_"))
         .append("div")
             .attr("class", "p-1 doc-preview")
-            .text(function() { return contents.substr(0, 50) + "..."; });
+            .text(function() { return contents.substr(0, 100) + "..."; });
 }
 
 function updateDocumentBarVisuals(barContainer, stats, dict) {
@@ -400,7 +424,7 @@ function updateDocumentBarVisuals(barContainer, stats, dict) {
             stoplist = Object.keys(dict).filter(function(key){ return dict[key] == stats.indexOf(d); })[0];
             if (stoplist == "metrics") { return "salmon"; }
             else if (stoplist == "overlap") { return "dimgray"; } 
-            else { return colors(stoplistIndices[stoplist]); }
+            else { return color(stoplistIndices[stoplist]); }
         });
 
     stoplistBar.exit().remove();
@@ -417,7 +441,7 @@ function updateAllDocumentBars(stats, dict) {
 // Updates HTML elements for documents
 function updateDocumentVisuals(documents) {
     var documentElem = d3.select("#documents").selectAll('.document')
-        .data(documents, function(d) { return d.name; })
+        .data(documents, function(d) { return d.name; });
     
     documentElem.enter()
         .append("div")
@@ -427,6 +451,7 @@ function updateDocumentVisuals(documents) {
     
     documentElem.exit().remove();
     
+    documentElem.sort(function(a, b) { return b - a; });
     generateStatisticDisplay();
 }
 
@@ -502,6 +527,7 @@ function updateMetricListVisuals(selector, metricList) {
             else {
                 // Toggles metricEnabled and enabled attributes of word, based on current attributes
                 var currWord = sessionStopwords[stopwordIndices[d['word']]];
+                                
                 toggledActivation = !(currWord.metricEnabled || (currWord.enabled && currWord.inclusions > 0));
                 
                 currWord.metricEnabled = toggledActivation;
@@ -512,9 +538,6 @@ function updateMetricListVisuals(selector, metricList) {
         })
         .on("mouseover", function(d) {
             d3.selectAll(".stopword-" + d['word'].replace(/[\W_]+/g,"_")).classed("hover-highlighted", true);
-//            for (i in stoplistList) {
-//                if (stoplistList[i].stopwords.includes(d['word'])) { d3.selectAll(".stoplist-name-" + stoplistList[i]['name']).classed("hover-highlighted", true); }
-//            }
         })
         .on("mouseout", function(d) { d3.selectAll(".stopword-" + d['word'].replace(/[\W_]+/g,"_")).classed("hover-highlighted", false); })
         .append("span")
@@ -531,7 +554,12 @@ function updateMetricListVisuals(selector, metricList) {
             return false;
         }
         else { return true; }
-    })
+    });
+    stopwordElem.classed("progress-bar-striped", function(d) {
+        var currWord = sessionStopwords[stopwordIndices[d['word']]];
+        if ((d['word'] in stopwordIndices) && !currWord.enabled) { return true; }
+            else { return false; }
+    });
     
     stopwordElem.exit().remove();
 }

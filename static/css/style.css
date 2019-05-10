@@ -1,5 +1,6 @@
 body {
     height: 100vh;
+    cursor: default;
 }
 .container-fluid {
     height: 100%;
@@ -8,10 +9,11 @@ body {
 #branding {
     height: 6%;
     background-color: white;
-    color: dimgrey;
+    color: rgb(50,50,50);
     padding-left: 10px;
     font-size: 20px;
-    border-bottom: 1px solid lightgray;
+    border-bottom: .5px solid gray;
+    cursor: default;
 }
 .row {
     height: 94%;
@@ -41,6 +43,7 @@ body {
     font-size: 14px;
     padding: 0 10px;
     border-bottom: 1px solid #ccc;
+    cursor: default;
 }
 
 .stoplist-wrapper{
@@ -48,11 +51,12 @@ body {
     padding: 0;
 }
 .stoplist {
-    height: 60px;
+    height: 50px;
     border-bottom: .5px solid grey;
     width: 100%;
     margin: 0;
     position: relative;
+    overflow: hidden;
 }
 .stoplist:hover {
     background-color: #eee;
@@ -64,10 +68,11 @@ body {
 }
 
 .document {
-    height: 60px;
+    height: 50px;
     border-bottom: .5px solid grey;
     margin: 0;
     position: relative;
+    overflow: hidden;
 }
 .document:hover {
     background-color: #eee;
@@ -93,7 +98,9 @@ body {
     overflow-y: auto;
 }
 #empty_warning {
-    color: gray;
+    margin-left: 5px;
+    font-size: 15px;
+    color: rgb(50,50,50);
 }
 #sub_buttonPanel {
     height: 10%
@@ -123,18 +130,22 @@ body {
 }
 
 .metadata {
-    width: 100%;
-    height: 50%;
+    max-height: 20px;
+    padding-left: 5px;
+}
+.metadata-1 {
+    font-weight: 450;
     font-size: 15px;
-    cursor: default;
-    padding: 0;
+}
+.metadata-2 {
+    font-style: italic;
 }
 .preview {
     width: 100%;
-    height: 50%;
-    color: gray;
-    cursor: default;
-    padding: 0;
+    font-size: 13px;
+    color: rgb(50,50,50);
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 .stopword {
@@ -153,9 +164,9 @@ body {
 
 #createStoplist-btn {
     position: absolute;
-    right: 1%;
-    top: 85%;
-    border-radius: 50%;
+    right: 30px;
+    font-size: 15px;
+    cursor: pointer;
 }
 
 .stopwordRemove-btn {
@@ -164,23 +175,6 @@ body {
 }
 .stopwordRemove-btn:focus {
     outline:0;
-}
-
-.stoplistEdit-btn {
-    position: absolute;
-    font-size: 12px;
-    width: 50px;
-    right: 1%;
-    top: 5%;
-    padding: 2px;
-}
-.stoplistDelete-btn {
-    position: absolute;
-    font-size: 12px;
-    width: 50px;
-    right: 1%;
-    top: 53%;
-    padding: 2px;
 }
 
 .metric-title {
@@ -207,24 +201,28 @@ li {
 }
 
 #download-btn {
+    color: black;
+    font-size: 20px;
     position: absolute;
     z-index: 1;
-    right: 3%;
-    top: 92%;
+    right: 10px;
+    top: 1%;
+    cursor: pointer;
 }
 #clear-btn {
     position: absolute;
-    z-index: 1;
-    right: 23%;
-    top: 92%;
+    font-size: 15px;
+    right: 30px;
+    cursor: pointer;
 }
 
 .tooltip {
   font-size: 12px;
 }
 .helptip {
-    border-radius: 50%;
-    border: 2px solid lightgray;
+    position: absolute;
+    right: 7px;
+    font-size: 15px;
 }
 .helptip:focus {
   outline: none;
@@ -284,22 +282,38 @@ li {
     color: dimgray;
     font-weight: 600;
 }
-
+.doc-header {
+    max-height: 20px;
+    padding-left: 5px;
+}
 .doc-metadata {
     width: 40%;
     font-size: 15px;
-    cursor: default;
-    padding: 0;
-    overflow: hidden;
+    font-weight: 450;
 }
 .doc-preview {
-    width: 100%;
-    height: 50%;
     color: gray;
-    cursor: default;
-    padding: 0;
+    font-size: 13px;
+    color: rgb(50,50,50);
+    margin-left: 5px;
+    margin-top: 5px;
 }
 .doc-progress {
-    margin: 8px;
     width: 60%;
+    margin: 8px;
+}
+
+.stoplistEdit {
+    font-size: 12px;
+    position: absolute;
+    top: 10%;
+    right: 4%;
+    cursor: pointer;
+}
+.stoplistDelete {
+    font-size: 12px;
+    position: absolute;
+    top: 10%;
+    right: 1%;
+    cursor: pointer;
 }

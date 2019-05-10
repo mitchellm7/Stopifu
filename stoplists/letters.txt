@@ -1,5 +1,4 @@
 letters	general	8-7-2018
-a
 b
 c
 d
@@ -16,4 +15,4 @@ o
 p
 q
 r
-s
+z

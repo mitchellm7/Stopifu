@@ -11,6 +11,9 @@
     
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
@@ -31,12 +34,6 @@
                 <div class="modal-body"> 
                     <img id="modalImage" src="{{ url_for('static', filename='majorModalHelper.PNG') }}">
                 </div>
-
-<!--
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Get Started</button>
-                </div>
--->
             </div>
         </div>
     </div>
@@ -94,32 +91,35 @@
     
     <div class="container-fluid" aria-hidden="true">
         
-        <div class="row" id="branding"> Stopifu </div>
+        <div class="row" id="branding"> 
+            Stopifu 
+            <i class="fas fa-file-download" id="download-btn" onclick="download()" title="Download current stopwords."></i>
+        </div>
         <div class="row">
             <div id="cause" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Sublists
-                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a stoplist to activate/deactivate.">?</button>
+                    <i class="fas fa-plus-circle" data-toggle="modal" data-target="#addStoplistPopup" id="createStoplist-btn" title="Add a new sublist."></i>
+                    <i class="fas fa-question-circle helptip" data-toggle="tooltip" data-placement="left" title="Select a sublist to toggle activation or hover for more options."></i>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stoplist">
                     <div class="d-flex flex-column" id="stoplists"></div>
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addStoplistPopup" id="createStoplist-btn"> + </button>
                 </div>
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Metrics
-                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click a word to add/remove from your stoplist. <br> Hover to see advanced statistics.">?</button>
+                    <i class="fas fa-question-circle helptip" data-toggle="tooltip" data-placement="left" title="Select a word to enable/disable from the stoplist. <br> Hover for advanced statistics."></i>
                 </div>
                 <div class="col-md-12 sub_section" id="sec_metric">
                     <div class="container-fluid" aria-hidden="true" id="sub_metric">
                         <div class="row">
                             <div class="col-md-4 metric" id="freqList"> 
-                                <div class="metric-title"> By frequency </div>
+                                <div class="metric-title"> Frequency </div>
                             </div>
                             <div class="col-md-4 metric" id="lengthList"> 
-                                <div class="metric-title"> By length </div>
+                                <div class="metric-title"> Length </div>
                             </div>
                             <div class="col-md-4 metric" id="tfidfList"> 
-                                <div class="metric-title" data-toggle="tooltip" data-placement="left" title="Term Frequency Inverse Document Frequency shows the importance of a word to a specific doc. in a corpus."> By max. tf-idf </div>
+                                <div class="metric-title" data-toggle="tooltip" data-placement="left" title="Term Frequency Inverse Document Frequency shows the importance of a word to a specific doc. in a corpus."> Maximum tf-idf </div>
                             </div>
                         </div>
                     </div>
@@ -129,23 +129,18 @@
             <div id="output" class="col-md-2">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Final Stoplist
-                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Click 'x' to disable a stopword.<br> Click the download button to save the stoplist.">?</button>
+                    <i class="fas fa-eraser" id="clear-btn" onclick="clearStoplist()" title="Clear current stopwords."></i>
+                    <i class="fas fa-question-circle helptip" data-toggle="tooltip" data-placement="left" title="Click 'x' to remove a word. Hover to determine which sublist contains a word."></i>
                 </div>
                 <div class="col-md-12 sub_section d-flex align-content-start flex-wrap" id="sub_fullStoplist">
                     <span id="empty_warning"> No stopwords selected. </span>
-                    <button type="button" class="btn btn-default" id="download-btn" onclick="download()">
-                    <span> D </span>
-                    </button>
-                    <button type="button" class="btn btn-default" id="clear-btn" onclick="clearStoplist()">
-                    <span> C </span>
-                    </button>
                 </div>
             </div>
             
             <div id="effect" class="col-md-5">
                 <div class="col-md-12 sec_title navbar navbar-default">
                     Corpus
-                    <button class="helptip" data-toggle="tooltip" data-placement="left" title="Document statistics are updated based on activated stoplists/words.">?</button>
+                    <i class="fas fa-question-circle helptip" data-toggle="tooltip" data-placement="left" title="Document statistics are updated based on activated stoplists/words."></i>
                 </div>
                 <div class="col-md-12 sub_section" id="sub_stats">
                     <table id="stats-table">

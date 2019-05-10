@@ -275,8 +275,11 @@ def home():
                             tokenStatistics = tdm)
     
 if __name__ == '__main__':
-    if os.path.isdir(sys.argv[1]):
-        docDir = sys.argv[1]
+    docDir = sys.argv[1]
+    if docDir[-1] != "\\":
+        docDir = docDir + "\\"
+        
+    if os.path.isdir(docDir):
         tdm, termIndices, tokenFreq = getMetrics(docDir, True)
         app.run(debug = True)
     else: 

@@ -1,7 +1,0 @@
-test2	cat2	2-14-2019
-are
-in
-
-words
-different
-here
