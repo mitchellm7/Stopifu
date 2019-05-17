@@ -12,7 +12,8 @@ def get_tokens(filename):
     with open(filename, 'r') as document:
         text = document.read()
         lowers = text.lower()
-        no_punctuation = lowers.translate(None, string.punctuation)
+        # For python2.7 replace following line with: no_punctuation = lowers.translate(None, string.punctuation)
+        no_punctuation = lowers.translate(str.maketrans('','',string.punctuation))
         tokens = nltk.word_tokenize(no_punctuation)
         return tokens
 

@@ -274,10 +274,9 @@ def home():
                             stoplistNames = getStoplistNames(),
                             tokenStatistics = tdm)
     
+    
 if __name__ == '__main__':
     docDir = sys.argv[1]
-    #if docDir[-1] != "\\":
-    #    docDir = docDir + "\\"
         
     print(docDir)
 
@@ -286,17 +285,13 @@ if __name__ == '__main__':
         
         if len(sys.argv) == 2:
             app.run(debug = True)
-        else:
+        elif len(sys.argv) == 4:
             host = sys.argv[2]
             port = int(sys.argv[3])
             app.run(host=host, port=port, debug=True)
+        else:
+            print('Usage: {0} host port'.format(sys.argv[0]))
+            print('  Example: {0} perlman.mathcs.carleton.edu 5101'.format(sys.argv[0]))
+            exit()
     else: 
         print("Invalid directory path.")
-    
-#    tdm = getMetrics("docTestDir/")
-#    with open('test1.csv', 'wb+') as stats:
-#        firstRow = ['term', 'total freq', 'doc freqs', '', '', '', '', 'tdidfs']
-#        csvWriter = csv.writer(stats, delimiter=",")
-#        csvWriter.writerow(firstRow)
-#        for word in tdm:
-#            csvWriter.writerow([word['word']] + [word['totalFreq']] + word['docFreqs'] + word['tfidf'])

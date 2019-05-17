@@ -200,13 +200,23 @@ li {
     width: 1000px;
 }
 
-#download-btn {
+#download {
     color: black;
-    font-size: 20px;
+    font-size: 15px;
     position: absolute;
     z-index: 1;
-    right: 10px;
     top: 1%;
+    right: 35px;
+    cursor: pointer;
+}
+#download-btn {
+    font-size: 20px;
+}
+#modalBtn {
+    color: black;
+    position: absolute;
+    top: 1%;
+    right: 10px;
     cursor: pointer;
 }
 #clear-btn {
