@@ -18,10 +18,10 @@ docDir = ""
 def download(fullList):
     fullList = json.loads(fullList)
     
-    downloadPath = 'output/stoplist.txt'
+    downloadPath = os.path.join('output','stoplist.txt')
     uniq = 1
     while os.path.exists(downloadPath):
-        downloadPath = 'output/stoplist_%s.txt' % (uniq)
+        downloadPath = os.path.join('output','stoplist_%s.txt' % (uniq))
         uniq += 1
         
     with open(downloadPath, "wb") as file:
@@ -31,8 +31,8 @@ def download(fullList):
 # Creates a new stoplist (if valid name)
 @app.route('/create_stoplist/<name>/<category>/<date>')
 def createStoplist(name, category, date):
-    if not os.path.isfile("stoplists/" + name + ".txt"):
-        with open("stoplists/" + name + ".txt", "w") as file:
+    if not os.path.isfile(os.path.join("stoplists", '{}.txt'.format(name))):
+        with open(os.path.join("stoplists", "{}.txt".format(name)), "w") as file:
             file.write(name + "\t" + category + "\t" + date + "\n")
         return jsonify({})
     else:
@@ -42,8 +42,8 @@ def createStoplist(name, category, date):
 # Removes a stoplist
 @app.route('/remove_stoplist/<name>')
 def removeStoplist(name):
-    if os.path.isfile("stoplists/" + name + ".txt"):
-        os.remove("stoplists/" + name + ".txt")
+    if os.path.isfile(os.path.join("stoplists","{}.txt".format(name))):
+        os.remove(os.path.join("stoplists",'{}.txt'.format(name)))
         return jsonify({})
     else: 
         return "No such file exists."
@@ -51,8 +51,8 @@ def removeStoplist(name):
 # Adds a word to a stoplist file (repurposed from Kipp's Stopify)
 @app.route('/add_to_stoplist/<name>/<word>')
 def addToStoplist(name, word):
-    if os.path.isfile("stoplists/" + name + ".txt"):
-        with open("stoplists/" + name + ".txt", "a+") as file:
+    if os.path.isfile(os.path.join("stoplists",'{}.txt'.format(name))):
+        with open(os.path.join("stoplists","{}.txt".format(name)), "a+") as file:
             file.write("%s\n" % word)
         return jsonify({})
     else:
@@ -62,15 +62,15 @@ def addToStoplist(name, word):
 # Removes a word from a stoplist file
 @app.route('/remove_from_stoplist/<name>/<word>')
 def removeFromStoplist(name, word):
-    if os.path.isfile("stoplists/" + name + ".txt"):
+    if os.path.isfile(os.path.join("stoplists", '{}.txt'.format(name))):
         # Copies every line from stoplist file, except word-to-remove
         stoplist = []
-        with open("stoplists/" + name + ".txt", 'r') as file:
+        with open(os.path.join("stoplists", '{}.txt'.format(name)), 'r') as file:
             for line in file:
                 if not (line.strip() == word):
                     stoplist.append(line.strip() + "\n")
         # Replaces stoplist file with copy
-        with open("stoplists/" + name + ".txt", 'w') as file:
+        with open(os.path.join("stoplists",'{}.txt'.format(name)), 'w') as file:
             file.writelines(stoplist)
         return jsonify({})
     else:
@@ -82,8 +82,8 @@ def getStoplist(name, jsonifyCheck = True):
     stoplist = {}
     stopwords = []
     stoplist['stopwords'] = stopwords
-    if os.path.isfile("stoplists/" + name + ".txt"):
-        with open("stoplists/" + name + ".txt", "r+") as file:
+    if os.path.isfile(os.path.join("stoplists", '{}.txt'.format(name))):
+        with open(os.path.join("stoplists", '{}.txt'.format(name)), "r+") as file:
             metadata = file.readline().split("\t")
             for line in file:
                 stoplist['stopwords'].append(line.strip())
@@ -112,8 +112,8 @@ def getDocumentSample(path, name, jsonifyCheck = True):
     document = {}
     document['name'] = name
     contents = []
-    if os.path.isfile(path + name + ".txt"):
-        with open(path + name + ".txt", "r+") as file:
+    if os.path.isfile(os.path.join(path, '{}.txt'.format(name))):
+        with open(os.path.join(path, '{}.txt'.format(name)), "r+") as file:
             for line in file:
                 contents.append(line.strip())
                 if len(contents) > 49:
@@ -138,7 +138,7 @@ def getAllDocuments():
 # Returns names of all stoplist files in stoplist directory
 def getStoplistNames():
     stoplistNames = []
-    for item in os.listdir('stoplists/'):
+    for item in os.listdir('stoplists'):
         stoplistNames.append(item[:-4])
     return stoplistNames
     
