@@ -39,13 +39,12 @@ function addToSessionStopwords(word, inclusions, enabled, metricEnabled = false,
 // Downloads full stoplist
 function download() {
     filteredList = sessionStopwords.filter(function(d){ return (d.inclusions > 0 || d.metricEnabled) && d.enabled === true; });
-    stopwordList = []
+    stopwordList = '';
     for (i in filteredList) {
-        stopwordList.push(filteredList[i]['word']);
+        stopwordList += filteredList[i]['word'] + '\n';
     }
-    var stopURL = '/download/' + JSON.stringify(stopwordList);
-    d3.json(stopURL, function(foo) { });
-    alert("Stoplist saved to output folder within Stopifu directory.");
+    d3.select('#download')
+        .attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(stopwordList));
 }
 
 // Clears full stoplist
@@ -750,6 +749,10 @@ window.onload = function() {
     generateStatisticDisplay();
     generateVisualization();
     updateVisuals();
+
+    // Bind download function to download link
+    d3.select('#download').on('click', download);
+
     $('#majorModalHelper').modal('show');
     
     $(document).ready(function(){
