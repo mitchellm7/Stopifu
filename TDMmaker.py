@@ -26,7 +26,7 @@ def make_term_document_matrix(path):
     cur_number = 0
     termIterator = 0
     # Creates list of all filenames in directory ending in '.txt'
-    docs = glob.glob(path + '*.txt')
+    docs = glob.glob(os.path.join(path, '*.txt'))
 
 
     for filename in docs:
@@ -55,7 +55,7 @@ def make_term_document_matrix(path):
 
 def getTokenFreq(path):
     tokenFreq = []
-    docs = glob.glob(path + '*.txt')
+    docs = glob.glob(os.path.join(path, '*.txt'))
     
     for filename in docs:
         tokenFreq.append(len(get_tokens(filename)))
