@@ -223,8 +223,7 @@ def getStatistics(fullList):
             else:
                 stoplistFreqs[stoplistIndices['metrics']] += tdm[termIndices[word['word']]]['totalFreq']
                 for i in range(len(tdm[termIndices[word['word']]]['docFreqs'])):
-                    stoplistDocFreqs[stoplistIndices['metrics']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]       
-    print(tokensBefore)            
+                    stoplistDocFreqs[stoplistIndices['metrics']][i] += tdm[termIndices[word['word']]]['docFreqs'][i]
     stats[0] = str( round(stopwordTokenSum / float(tokensBefore), 5) * 100)
     if len(stopwordFreqs) == 0:
         stats[1] = str(0)
@@ -236,7 +235,6 @@ def getStatistics(fullList):
     for i in range(len(stoplistFreqs)):
         stoplistFreqs[i] = str( round(stoplistFreqs[i] / float(tokensBefore), 5) * 100)
         for j in range(len(stoplistDocFreqs[i])):
-            print(tokenFreq[j])
             stoplistDocFreqs[i][j] = str(round(stoplistDocFreqs[i][j] / float(tokenFreq[j]), 5) *  100)
     
     stats.append(stoplistFreqs)
