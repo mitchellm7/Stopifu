@@ -9,6 +9,11 @@ import glob
 # TODO: think about the leaving the case of the words alone
 # -Returns: lowercase, punctuation-free, list of tokens
 def get_tokens(filename):
+    try:
+        nltk.data.find('tokenizers/punkt')
+    except LookupError:
+        nltk.download('punkt')
+
     with open(filename, 'r') as document:
         text = document.read()
         lowers = text.lower()
