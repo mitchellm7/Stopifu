@@ -18,7 +18,7 @@ Enter the command “python Stopifu.py [directory of your corpus]” in the Anac
 Open a web browser and navigate to the IP address the command prompt prints.
 
 ## Using Stopifu
-![Stopifu UI](https://github.com/mitchellm7/Stopifu/blob/master/static/majorModalHelper.PNG)
+![Stopifu UI](https://github.com/mitchellm7/Stopifu/blob/master/static/readmeImage.PNG)
 The app consists of five subsections, which work together to build and analyze the stoplist.
 The sublist section, at the top left, holds “sublists,” smaller related groups of stopwords which form the final stoplist. Sublists can be used to group stopwords grammatically or by corpus-specific needs. Stopifu automatically includes several grammatical sublists including articles, conjunctions, and contractions. Users can create their own sublists, which are saved for later sessions.
 The metric section, at the bottom left, provides potential stopword suggestions, pulled from the currently selected corpus based on several metrics. The metrics are 1) frequency, sorted by highest to lowest, 2) length, sorted lowest to highest, and 3) tf-idf, or “term frequency inverse document frequency,” sorted from highest to lowest, which finds words of high importance to a single document but which appear at low frequencies in the rest of the corpus.
