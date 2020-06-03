@@ -18,8 +18,10 @@ We recommend downloading Anaconda Individual Edition, a package manager and Pyth
 	If using Anaconda, enter the command, “conda install -c anaconda nltk”
 	Otherwise, follow the installation instructions at https://www.nltk.org/data.html
 6. Place the corpus of documents with which you wish to build a stoplist in a directory on your computer. Documents should be formatted as .txt files and should contain only the text which you wish to analyze (i.e. metainformation like title, authorship, publication should be removed).
-Enter the command “python Stopifu.py [directory of your corpus]” in the Anaconda prompt, or your command prompt
-Open a web browser and navigate to the IP address the command prompt prints.
+7. Enter the command `python Stopifu.py [directory of your corpus]` in the Anaconda prompt, or your command prompt.
+
+Stopifu includes a testing directory (called "docTestDir/"), which includes a subset of Shakespeare plays. You may use this directory to test Stopifu if you do not have a directory of your own.
+8. Open a web browser and navigate to the IP address printed by the command prompt.
 
 ## Using Stopifu
 ![Stopifu UI](https://github.com/mitchellm7/Stopifu/blob/master/static/readmeImage.PNG)
