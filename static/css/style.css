@@ -33,10 +33,6 @@ body {
 #output {
     border-right: 1px solid #ccc;
 }
-#effect {
-    
-}
-
 .sec_title {
     background-color: #eeeeee;
     height: 5%;
@@ -326,4 +322,15 @@ li {
     top: 10%;
     right: 1%;
     cursor: pointer;
+}
+.dot {
+  position: absolute;
+  left: 10%;
+  top: 35%;
+  height: 15px;
+  width: 15px;
+  background-color: #FA8072;
+  border-radius: 50%;
+}
+#colorSig {
 }
