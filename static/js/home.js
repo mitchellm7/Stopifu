@@ -410,8 +410,8 @@ function updateDocumentBarVisuals(barContainer, stats, dict) {
         .attr("role", "progressbar");
 
     stoplistBar
-        .attr("data-toggle", "tooltip")
-        .attr("data-placement", "right")
+//        .attr("data-toggle", "tooltip")
+//        .attr("data-placement", "right")
         .style("width", function(d) { return d + "%" })
         .attr(":value", function(d) { return d + "%" })
         .attr("title", function(d) {
@@ -607,7 +607,7 @@ function generateStatisticDisplay() {
         d3.select("#stat3")
             .text(foo['stats'][1]);
         
-        $(".stoplistBar").tooltip({delay: {show: 500, hide: 100}, animation: true, html: true});
+//        $(".stoplistBar").tooltip({delay: {show: 500, hide: 100}, animation: true, html: true});
     });
 }
 
@@ -739,6 +739,7 @@ function updateVisualization() {
         
         bars.exit().remove();
     });
+    $('[data-toggle="tooltip"]').tooltip({delay: {show: 300, hide: 50}, animation: true, html: true});
 }
 
 // Main function
@@ -756,6 +757,6 @@ window.onload = function() {
     $('#majorModalHelper').modal('show');
     
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip({delay: {show: 300, hide: 50}, animation: true, html: true}); 
+//        $('[data-toggle="tooltip"]').tooltip({delay: {show: 300, hide: 50}, animation: true, html: true}); 
     });
 }

@@ -226,8 +226,10 @@ li {
   font-size: 12px;
 }
 .helptip {
+/*
     position: absolute;
     right: 7px;
+*/
     font-size: 15px;
 }
 .helptip:focus {
@@ -323,14 +325,11 @@ li {
     right: 1%;
     cursor: pointer;
 }
-.dot {
-  position: absolute;
-  left: 10%;
-  top: 35%;
-  height: 15px;
-  width: 15px;
-  background-color: #FA8072;
-  border-radius: 50%;
-}
 #colorSig {
+    position: fixed;
+    left: 60px;
+    height: 15px;
+    width: 15px;
+    background-color: #FA8072;
+    border-radius: 50%;
 }
